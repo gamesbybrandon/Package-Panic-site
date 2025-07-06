@@ -27,55 +27,77 @@
     <div class="section">
       <h2>Leaderboards:</h2>
       <div class="grid">
-        <button onclick="location.href='/pages/leaderboard-global.html'">Global Leaderboard</button>
-        <button onclick="location.href='/pages/area51.html'">Area51 Leaderboard</button>
+        <a class="menu-btn" href="pages/leaderboard-global.html">Global Leaderboard</a>
+        <a class="menu-btn" href="pages/area51.html">Area51 Leaderboard</a>
       </div>
     </div>
 
     <div class="section">
       <h2>Account:</h2>
       <div class="grid">
-        <button onclick="location.href='/pages/stats.html'">Stats</button>
-        <button onclick="location.href='/pages/awards.html'">Awards</button>
-        <button onclick="location.href='/pages/settings.html'">Settings</button>
-        <button onclick="location.href='/pages/manage-premium-membership.html'">Manage Premium Membership</button>
+        <a class="menu-btn" href="pages/stats.html">Stats</a>
+        <a class="menu-btn" href="pages/awards.html">Awards</a>
+        <a class="menu-btn" href="pages/settings.html">Settings</a>
+        <a class="menu-btn" href="pages/manage-premium-membership.html">Manage Premium Membership</a>
       </div>
     </div>
 
     <div class="section">
       <h2>Game:</h2>
       <div class="grid">
-        <button onclick="location.href='/pages/how-to-play.html'">How to Play</button>
-        <button onclick="location.href='/pages/return-to-app.html'">Return to App</button>
-        <button onclick="location.href='/pages/download-app.html'">Download App</button>
+        <a class="menu-btn" href="pages/how-to-play.html">How to Play</a>
+        <a class="menu-btn" href="pages/return-to-app.html">Return to App</a>
+        <a class="menu-btn" href="pages/download-app.html">Download App</a>
       </div>
     </div>
 
     <div class="section">
       <h2>Discussion:</h2>
       <div class="grid">
-        <button onclick="location.href='/pages/general-chat.html'">General Chat</button>
-        <button onclick="location.href='/pages/contact-us.html'">Contact Us</button>
-        <button onclick="location.href='/pages/contest-subs.html'">Contest Subs</button>
+        <a class="menu-btn" href="pages/general-chat.html">General Chat</a>
+        <a class="menu-btn" href="pages/contact-us.html">Contact Us</a>
+        <a class="menu-btn" href="pages/contest-subs.html">Contest Subs</a>
       </div>
     </div>
 
     <div class="section">
       <h2>Contests:</h2>
       <div class="grid">
-        <button onclick="location.href='/pages/active-contest.html'">Active Contest</button>
-        <button onclick="location.href='/pages/previous-contest.html'">Previous Contests</button>
-        <button onclick="location.href='/pages/contest-winners.html'">Contest Winners</button>
+        <a class="menu-btn" href="pages/active-contest.html">Active Contest</a>
+        <a class="menu-btn" href="pages/previous-contest.html">Previous Contests</a>
+        <a class="menu-btn" href="pages/contest-winners.html">Contest Winners</a>
       </div>
     </div>
 
     <div class="section">
       <h2>From Admin:</h2>
       <div class="grid">
-        <button onclick="location.href='/pages/patch-notes-bug-fixes.html'">Patch Notes / Bug Fixes</button>
-        <button onclick="location.href='/pages/scheduled-updates.html'">Scheduled Updates</button>
+        <a class="menu-btn" href="pages/patch-notes-bug-fixes.html">Patch Notes / Bug Fixes</a>
+        <a class="menu-btn" href="pages/scheduled-updates.html">Scheduled Updates</a>
       </div>
     </div>
   </div>
 </body>
 </html>
+✅ Extra step (only if buttons look weird now):
+In your CSS file (/assets/css/style.css), make sure you’ve added a class for .menu-btn. If not, toss this in:
+
+css
+Copy
+Edit
+.menu-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #222;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  margin: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.menu-btn:hover {
+  background-color: #444;
+}
