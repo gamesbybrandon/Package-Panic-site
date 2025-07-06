@@ -1,1 +1,75 @@
+ <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('webpage1080x1920.jpg.png') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+    }
 
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      position: sticky;
+      top: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 999;
+    }
+
+    .account-info {
+      text-align: right;
+    }
+
+    .tagline {
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 1.1rem;
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .section {
+      margin: 25px 0;
+      width: 100%;
+    }
+
+    .section h2 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-style: italic;
+      text-decoration: underline;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      text-align: center;
+    }
+
+    .grid button {
+      padding: 10px;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 1px solid white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .grid button:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  </style>
