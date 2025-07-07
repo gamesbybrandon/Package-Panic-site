@@ -53,7 +53,7 @@
     <div class="section">
       <h2>Discussion:</h2>
       <div class="grid">
-        <a class="menu-btn" href="/pages/discord.html">Discord</a>
+        <a class="menu-btn" href="https://discord.gg/H8THUeuZgb" target="_blank" rel="noopener noreferrer">Discord</a>
         <a class="menu-btn" href="/pages/contact-us.html">Contact Us</a>
       </div>
     </div>
@@ -80,7 +80,6 @@
   <script>
     document.querySelectorAll('.menu-btn').forEach(btn => {
       btn.addEventListener('click', e => {
-        // Force it in case something tries to override anchor behavior
         window.location.href = btn.getAttribute('href');
       });
     });
