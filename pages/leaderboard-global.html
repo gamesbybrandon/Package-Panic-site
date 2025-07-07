@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -25,9 +25,16 @@
 
     h1 {
       text-align: center;
-      margin-bottom: 25px;
+      margin-bottom: 10px;
       font-size: 2rem;
       text-decoration: underline;
+    }
+
+    #week-display {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 20px;
     }
 
     table {
@@ -89,6 +96,8 @@
 <body>
   <div class="leaderboard-container">
     <h1>Global Leaderboard</h1>
+    <div id="week-display">Loading Week...</div>
+
     <table>
       <thead>
         <tr>
@@ -111,9 +120,17 @@
   </div>
 
   <script>
-    // Placeholder for dynamic leaderboard population
-    // You’ll replace this with real data logic when ready
+    // === WEEK DISPLAY ===
+    function getCurrentWeekNumber() {
+      const now = new Date();
+      const jan1 = new Date(now.getFullYear(), 0, 1);
+      const days = Math.floor((now - jan1) / 86400000);
+      return Math.ceil((days + jan1.getDay() + 1) / 7);
+    }
 
+    document.getElementById("week-display").textContent = `Week ${getCurrentWeekNumber()}`;
+
+    // === PAGINATION SETUP ===
     let currentPage = 0;
     const rowsPerPage = 25;
 
@@ -121,16 +138,18 @@
     const prevBtn = document.getElementById("prev-page");
     const nextBtn = document.getElementById("next-page");
 
-    // Example structure for your data later
-    const leaderboardData = []; // Will be populated from your backend
+    // === DATA (to be replaced with real user data from backend) ===
+    const leaderboardData = []; // Real players will populate this
 
+    // === RENDER PAGE FUNCTION ===
     function renderPage(page) {
       leaderboardBody.innerHTML = "";
+
       const start = page * rowsPerPage;
       const end = start + rowsPerPage;
-      const visibleRows = leaderboardData.slice(start, end);
+      const pageRows = leaderboardData.slice(start, end);
 
-      visibleRows.forEach(player => {
+      pageRows.forEach((player) => {
         const row = document.createElement("tr");
 
         row.innerHTML = `
@@ -139,30 +158,32 @@
           <td>${player.panic}%</td>
           <td>${player.username}</td>
           <td class="awards-cell">
-            ${player.awards.map(img => `<img src="${img}" class="award-icon" />`).join('')}
+            ${player.awards.map(img => `<img src="${img}" class="award-icon" />`).join("")}
           </td>
         `;
 
         leaderboardBody.appendChild(row);
       });
 
-      prevBtn.disabled = page === 0;
+      prevBtn.disabled = currentPage === 0;
       nextBtn.disabled = end >= leaderboardData.length;
     }
 
-    prevBtn.onclick = () => {
+    // === PAGINATION EVENTS ===
+    prevBtn.addEventListener("click", () => {
       if (currentPage > 0) {
         currentPage--;
         renderPage(currentPage);
       }
-    };
+    });
 
-    nextBtn.onclick = () => {
+    nextBtn.addEventListener("click", () => {
       currentPage++;
       renderPage(currentPage);
-    };
+    });
 
-    // Load real data and call renderPage(0) when ready
+    // === INITIAL LOAD ===
+    renderPage(currentPage);
   </script>
 </body>
 </html>
