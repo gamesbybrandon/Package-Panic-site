@@ -94,8 +94,8 @@
       <thead>
         <tr>
           <th>Rank</th>
-          <th>Level</th>
-          <th>Panic</th>
+          <th>Score</th>
+          <th>Time</th>
           <th>Username</th>
           <th>Awards</th>
         </tr>
@@ -119,22 +119,25 @@
     const prevBtn = document.getElementById("prev-page");
     const nextBtn = document.getElementById("next-page");
 
-    const leaderboardData = []; // Replace with Area51 user data later
+    const leaderboardData = []; // Replace with real Area 51 leaderboard data
 
     function renderPage(page) {
       leaderboardBody.innerHTML = "";
+
+      // Sort by score descending (highest score first)
+      leaderboardData.sort((a, b) => b.score - a.score);
 
       const start = page * rowsPerPage;
       const end = start + rowsPerPage;
       const pageRows = leaderboardData.slice(start, end);
 
-      pageRows.forEach((player) => {
+      pageRows.forEach((player, index) => {
         const row = document.createElement("tr");
 
         row.innerHTML = `
-          <td>${player.rank}</td>
-          <td>${player.level}</td>
-          <td>${player.panic}%</td>
+          <td>${start + index + 1}</td>
+          <td>${player.score}</td>
+          <td>${player.time}</td>
           <td>${player.username}</td>
           <td class="awards-cell">
             ${player.awards.map(img => `<img src="${img}" class="award-icon" />`).join("")}
