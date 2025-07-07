@@ -1,1 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us - Package Panic</title>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body>
+  <div class="header">
+    <div><h1>CONTACT US</h1></div>
+    <div class="account-info">
+      <div id="account-action">Login / Create Account</div>
+      <div id="user-info" style="display: none;">
+        Username: <strong>Player1</strong><br />
+        Awards: 🏆 🎖️
+      </div>
+    </div>
+  </div>
 
+  <div class="container">
+    <div class="section" style="max-width: 900px; margin: 40px auto; text-align: center;">
+      <p>
+        Have a question, concern, or found a bug?  
+        Join the conversation on our <a href="https://discord.gg/H8THUeuZgb" target="_blank" style="color: #00aaff;">Discord server</a> and DM the developer directly:<br />
+        <strong>Gamesbybrandon</strong>
+      </p>
+      <p style="margin-top: 20px;">
+        Or feel free to send an email to:<br />
+        <strong><a href="mailto:gamesbybrandon@gmail.com" style="color: #00aaff;">gamesbybrandon@gmail.com</a></strong>
+      </p>
+      <p style="margin-top: 30px; font-size: 0.9rem; color: #aaa;">
+        We’ll try to get back to you as soon as humanly (or inhumanly) possible.
+      </p>
+    </div>
+  </div>
+
+  <!-- Fallback button override -->
+  <script>
+    document.querySelectorAll('.menu-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        window.location.href = btn.getAttribute('href');
+      });
+    });
+  </script>
+</body>
+</html>
