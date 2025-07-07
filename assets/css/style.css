@@ -1,12 +1,21 @@
 html, body {
   margin: 0;
   padding: 0;
+  height: 100%;
   font-family: 'Segoe UI', sans-serif;
-  background: url('webpage1080x1920.jpg.png') no-repeat center center fixed;
-  background-size: cover;
+  background: url('/assets/images/webpage1080x1920.jpg.png') no-repeat center center fixed !important;
+  background-size: cover !important;
   color: white;
+  overflow: auto !important;
+  z-index: 0 !important;
 }
 
+* {
+  z-index: auto !important;
+  box-sizing: border-box;
+}
+
+/* HEADER */
 .header {
   display: flex;
   justify-content: space-between;
@@ -18,10 +27,12 @@ html, body {
   z-index: 999;
 }
 
+/* ACCOUNT INFO */
 .account-info {
   text-align: right;
 }
 
+/* TAGLINE */
 .tagline {
   text-align: center;
   padding: 10px 20px;
@@ -29,6 +40,7 @@ html, body {
   background: rgba(0, 0, 0, 0.6);
 }
 
+/* MAIN CONTAINER */
 .container {
   display: flex;
   flex-direction: column;
@@ -37,8 +49,10 @@ html, body {
   padding: 20px;
   max-width: 1000px;
   margin: 0 auto;
+  position: relative;
 }
 
+/* SECTIONS */
 .section {
   margin: 25px 0;
   width: 100%;
@@ -51,6 +65,7 @@ html, body {
   text-decoration: underline;
 }
 
+/* GRID LAYOUT FOR BUTTONS */
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -58,21 +73,7 @@ html, body {
   text-align: center;
 }
 
-.grid button {
-  padding: 10px;
-  font-size: 1rem;
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
-  border: 1px solid white;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.grid button:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-/* New class for actual working anchor buttons */
+/* MENU BUTTON STYLING */
 .menu-btn {
   display: inline-block;
   padding: 12px 24px;
