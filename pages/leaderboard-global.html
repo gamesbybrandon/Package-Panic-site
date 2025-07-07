@@ -1,1 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Global Leaderboard</title>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <style>
+    body {
+      background: url('/webpage1080x1920.jpg.png') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+    }
 
+    .leaderboard-container {
+      max-width: 1200px;
+      margin: 80px auto;
+      padding: 30px;
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 2rem;
+      text-decoration: underline;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: center;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      vertical-align: middle;
+    }
+
+    th {
+      background-color: rgba(255, 255, 255, 0.1);
+      font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.04);
+    }
+
+    .awards-cell {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 6px 0;
+    }
+
+    .award-icon {
+      width: 44px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    .pagination {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .pagination button {
+      padding: 8px 16px;
+      margin: 0 10px;
+      font-size: 1rem;
+      background-color: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 1px solid white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .pagination button:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+  </style>
+</head>
+<body>
+  <div class="leaderboard-container">
+    <h1>Global Leaderboard</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Level</th>
+          <th>Panic</th>
+          <th>Username</th>
+          <th>Awards</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body">
+        <!-- Dynamically populated rows will appear here -->
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <button id="prev-page" disabled>Previous</button>
+      <button id="next-page">Next</button>
+    </div>
+  </div>
+
+  <script>
+    // Placeholder for dynamic leaderboard population
+    // You’ll replace this with real data logic when ready
+
+    let currentPage = 0;
+    const rowsPerPage = 25;
+
+    const leaderboardBody = document.getElementById("leaderboard-body");
+    const prevBtn = document.getElementById("prev-page");
+    const nextBtn = document.getElementById("next-page");
+
+    // Example structure for your data later
+    const leaderboardData = []; // Will be populated from your backend
+
+    function renderPage(page) {
+      leaderboardBody.innerHTML = "";
+      const start = page * rowsPerPage;
+      const end = start + rowsPerPage;
+      const visibleRows = leaderboardData.slice(start, end);
+
+      visibleRows.forEach(player => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td>${player.rank}</td>
+          <td>${player.level}</td>
+          <td>${player.panic}%</td>
+          <td>${player.username}</td>
+          <td class="awards-cell">
+            ${player.awards.map(img => `<img src="${img}" class="award-icon" />`).join('')}
+          </td>
+        `;
+
+        leaderboardBody.appendChild(row);
+      });
+
+      prevBtn.disabled = page === 0;
+      nextBtn.disabled = end >= leaderboardData.length;
+    }
+
+    prevBtn.onclick = () => {
+      if (currentPage > 0) {
+        currentPage--;
+        renderPage(currentPage);
+      }
+    };
+
+    nextBtn.onclick = () => {
+      currentPage++;
+      renderPage(currentPage);
+    };
+
+    // Load real data and call renderPage(0) when ready
+  </script>
+</body>
+</html>
