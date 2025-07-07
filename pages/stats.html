@@ -1,1 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Player Stats</title>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <style>
+    body {
+      background: url('/webpage1080x1920.jpg.png') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+    }
 
+    .stats-container {
+      max-width: 1000px;
+      margin: 80px auto;
+      padding: 30px;
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      text-decoration: underline;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      font-size: 1.3rem;
+      margin-top: 30px;
+      margin-bottom: 10px;
+      text-decoration: underline;
+    }
+
+    .stat-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 15px;
+    }
+
+    .stat-box {
+      background-color: rgba(255, 255, 255, 0.05);
+      padding: 15px;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .stat-label {
+      font-weight: bold;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .stat-value {
+      font-size: 1.1rem;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <div class="stats-container">
+    <h1>Player Statistics</h1>
+
+    <h2>Gameplay Overview</h2>
+    <div class="stat-group">
+      <div class="stat-box"><span class="stat-label">Total Time Played:</span><span class="stat-value">--</span></div>
+      <div class="stat-box"><span class="stat-label">Sessions Played:</span><span class="stat-value">--</span></div>
+      <div class="stat-box"><span class="stat-label">Total Correct Packages:</span><span class="stat-value">--</span></div>
+      <div class="stat-box"><span class="stat-label">Total Missed Packages:</span><span class="stat-value">--</span></div>
+      <div class="stat-box"><span class="stat-label">Highest Level Completed:</span><span class="stat-value">--</span></div>
+      <div class="stat-box"><span class="stat-label">Game Overs:</span><span class="stat-value">--</span></div>
+      <div class="stat-box"><span class="stat-label">Longest Correct Streak:</span><span class="stat-value">--</span></div>
+    </div>
+
+    <h2>Panic Analytics</h2>
+    <div class="stat-group">
+      <div class="stat-box"><span class="stat-label">Highest Panic (Any Level):</span><span class="stat-value">--</span></div>
+      <div class="stat-box"><span class="stat-label">Lowest Panic (Any Level):</span><span class="stat-value">--</span></div>
+      <div class="stat-box"><span class="stat-label">Average Panic Score (Lifetime):</span><span class="stat-value">--</span></div>
+    </div>
+
+    <h2>Ad Tracking</h2>
+    <div class="stat-group">
+      <div class="stat-box"><span class="stat-label">Ads Watched:</span><span class="stat-value">--</span></div>
+      <div class="stat-box"><span class="stat-label">Total Ad Watch Time:</span><span class="stat-value">--</span></div>
+    </div>
+
+    <h2>Account Info</h2>
+    <div class="stat-group">
+      <div class="stat-box"><span class="stat-label">Date Created:</span><span class="stat-value">--</span></div>
+    </div>
+  </div>
+</body>
+</html>
