@@ -8,6 +8,7 @@ html, body {
   color: white;
   overflow: auto;
 }
+
 /* Global reset */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -93,3 +94,43 @@ html, body {
 
 .menu-btn:hover {
   background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* FOOTER STYLES */
+.site-footer {
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  text-align: center;
+  padding: 20px 10px;
+  font-size: 0.9rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  margin-top: 40px;
+}
+
+.footer-content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.footer-links {
+  margin: 10px 0;
+}
+
+.footer-links a {
+  color: #ccc;
+  text-decoration: none;
+  margin: 0 10px;
+  font-weight: bold;
+  transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+.footer-disclaimer {
+  font-size: 0.8rem;
+  color: #aaa;
+  margin-top: 8px;
+}
