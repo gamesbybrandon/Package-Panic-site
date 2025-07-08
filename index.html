@@ -38,6 +38,11 @@
       flex-wrap: wrap;
     }
 
+    .award-icon {
+      height: 40px;
+      width: auto;
+    }
+
     #account-action {
       font-size: 1em;
       text-decoration: underline;
@@ -79,6 +84,62 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    function getAwardIcons(awards) {
+      const icons = [];
+
+      const pushIfHas = (field, filename) => {
+        if (awards[field]) icons.push(`/assets/icons/${filename}`);
+      };
+
+      const tierSelect = (tierFields) => {
+        for (let i = tierFields.length - 1; i >= 0; i--) {
+          if (awards[tierFields[i].field]) return tierFields[i].filename;
+        }
+        return null;
+      };
+
+      const order = [
+        { type: "tiered", fields: [
+          { field: "juggernaut_award", filename: "Award Juggernaut Star.png" }
+        ]},
+        { type: "tiered", fields: [
+          { field: "package_bronze", filename: "Award Package Bronze.png" },
+          { field: "package_silver", filename: "Award Package Silver.png" },
+          { field: "package_gold", filename: "Award Package Gold.png" }
+        ]},
+        { type: "single", field: "retry_junky", filename: "Award Retry Junky.png" },
+        { type: "tiered", fields: [
+          { field: "conveyor_shiny", filename: "Award Shiny Conveyor.png" },
+          { field: "conveyor_worn", filename: "Award Worn Conveyor.png" },
+          { field: "conveyor_antique", filename: "Award Antique Conveyor.png" }
+        ]},
+        { type: "single", field: "panic_survivor", filename: "Award Panic Survivor.png" },
+        { type: "single", field: "code_of_arms", filename: "Award Code of Arms.png" },
+        { type: "single", field: "lab_rat", filename: "Award Lab Rat.png" },
+        { type: "single", field: "binoculars", filename: "Award Binoculars Ad Watch.png" },
+        { type: "tiered", fields: [
+          { field: "cup_bronze", filename: "Award Cup Bronze.png" },
+          { field: "cup_silver", filename: "Award Cup Silver.png" },
+          { field: "cup_gold", filename: "Award Cup Gold.png" },
+          { field: "cup_platinum", filename: "Award Cup Platinum.png" }
+        ]},
+        { type: "single", field: "outside_the_box", filename: "Award Thinking Outside the Box.png" },
+        { type: "single", field: "royal_artist", filename: "Award Royal Artist.png" },
+        { type: "single", field: "frank_alien", filename: "Award Frank Alien.png" }
+      ];
+
+      order.forEach(entry => {
+        if (entry.type === "single") {
+          pushIfHas(entry.field, entry.filename);
+        } else if (entry.type === "tiered") {
+          const icon = tierSelect(entry.fields);
+          if (icon) icons.push(`/assets/icons/${icon}`);
+        }
+      });
+
+      return icons;
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       const accountAction = document.getElementById("account-action");
       const userInfo = document.getElementById("user-info");
@@ -91,13 +152,15 @@
           if (userDoc.exists()) {
             const data = userDoc.data();
             const username = data.username || "User";
-            const awards = data.awards || [];
+            const awards = data.awards || {};
+
+            const awardIcons = getAwardIcons(awards);
 
             userInfo.style.display = "flex";
             userInfo.innerHTML = `
               <div class="user-line">
                 ${username}
-                ${awards.map(a => `<span>${a}</span>`).join(" ")}
+                ${awardIcons.map(src => `<img class="award-icon" src="${src}" alt="award" />`).join(" ")}
               </div>
             `;
 
