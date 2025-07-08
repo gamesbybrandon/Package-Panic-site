@@ -5,6 +5,60 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Package Panic</title>
   <link rel="stylesheet" href="/assets/css/style.css" />
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVk9j5oxhJ8Dp21fNHyb2q_GLUoA9q5q8",
+      authDomain: "packagepanic-8d51b.firebaseapp.com",
+      projectId: "packagepanic-8d51b",
+      storageBucket: "packagepanic-8d51b.firebasestorage.app",
+      messagingSenderId: "1013005031900",
+      appId: "1:1013005031900:web:3a348735c268ac6ece9719"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const accountAction = document.getElementById("account-action");
+      const userInfo = document.getElementById("user-info");
+
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          const uid = user.uid;
+          const userDoc = await getDoc(doc(db, "users", uid));
+
+          if (userDoc.exists()) {
+            const data = userDoc.data();
+            const username = data.username || "User";
+            const awards = data.awards || [];
+
+            userInfo.style.display = "block";
+            userInfo.innerHTML = `Username: <strong>${username}</strong><br />Awards: ${awards.join(" ")}`;
+
+            accountAction.textContent = "Log Out";
+            accountAction.style.cursor = "pointer";
+            accountAction.onclick = async () => {
+              await signOut(auth);
+              location.reload();
+            };
+          }
+        } else {
+          userInfo.style.display = "none";
+          accountAction.textContent = "Login / Create Account";
+          accountAction.style.cursor = "pointer";
+          accountAction.onclick = () => {
+            window.location.href = "/pages/account.html";
+          };
+        }
+      });
+    });
+  </script>
 </head>
 <body>
   <div class="header">
