@@ -5,6 +5,73 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Package Panic</title>
   <link rel="stylesheet" href="/assets/css/style.css" />
+  <style>
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 10px 20px;
+      background-color: #222;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 2.2rem;
+      margin: 0;
+    }
+
+    .account-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      max-width: 100%;
+      word-break: break-word;
+    }
+
+    #user-info strong {
+      font-size: 1.8rem;
+    }
+
+    #user-info {
+      font-size: 1rem;
+      line-height: 1.2;
+      text-align: right;
+    }
+
+    .tagline {
+      padding: 10px 20px;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .account-info {
+        align-items: center;
+        text-align: center;
+      }
+
+      #user-info strong {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -26,8 +93,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       const accountAction = document.getElementById("account-action");
-      const usernameBox = document.getElementById("username-box");
-      const awardsBox = document.getElementById("awards-box");
+      const userInfo = document.getElementById("user-info");
 
       onAuthStateChanged(auth, async (user) => {
         if (user) {
@@ -39,11 +105,8 @@
             const username = data.username || "User";
             const awards = data.awards || [];
 
-            usernameBox.style.display = "block";
-            usernameBox.innerHTML = `<strong>${username}</strong>`;
-
-            awardsBox.style.display = "block";
-            awardsBox.innerHTML = `${awards.join(" ")}`;
+            userInfo.style.display = "block";
+            userInfo.innerHTML = `<strong>${username}</strong><br />${awards.join(" ")}`;
 
             accountAction.textContent = "Log Out";
             accountAction.style.cursor = "pointer";
@@ -53,8 +116,7 @@
             };
           }
         } else {
-          usernameBox.style.display = "none";
-          awardsBox.style.display = "none";
+          userInfo.style.display = "none";
           accountAction.textContent = "Login / Create Account";
           accountAction.style.cursor = "pointer";
           accountAction.onclick = () => {
@@ -64,51 +126,15 @@
       });
     });
   </script>
-
-  <style>
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      background-color: #111;
-      color: white;
-    }
-
-    #username-box {
-      font-size: 2.2rem;
-      font-weight: bold;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    #awards-box {
-      font-size: 1.5rem;
-      text-align: right;
-      padding-right: 15px;
-    }
-
-    .account-info {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    #account-action {
-      font-size: 1rem;
-      cursor: pointer;
-    }
-  </style>
 </head>
 <body>
   <div class="header">
-    <div>
-      <h1>PACKAGE PANIC</h1>
-    </div>
-    <div id="username-box" style="display: none;"></div>
-    <div id="awards-box" style="display: none;"></div>
+    <h1>PACKAGE PANIC</h1>
     <div class="account-info">
+      <div id="user-info" style="display: none;">
+        <strong>Player1</strong><br />
+        🏆 🎖️
+      </div>
       <div id="account-action">Login / Create Account</div>
     </div>
   </div>
