@@ -17,9 +17,15 @@
       flex-wrap: wrap;
     }
 
-    .header h1 {
-      margin: 0;
-      font-size: 2.2em;
+    .site-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      height: 56px;
+      width: auto;
     }
 
     .account-info {
@@ -49,6 +55,17 @@
       cursor: pointer;
     }
 
+    .footer-branding {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .footer-logo {
+      height: 48px;
+      width: auto;
+      margin-top: 6px;
+    }
+
     @media (max-width: 768px) {
       .header {
         flex-direction: column;
@@ -62,6 +79,15 @@
 
       .user-line {
         font-size: 1.5em;
+      }
+
+      .site-title {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .brand-logo {
+        height: 48px;
       }
     }
   </style>
@@ -182,7 +208,10 @@
 
 <body>
   <div class="header">
-    <h1>PACKAGE PANIC</h1>
+    <div class="site-title">
+      <img src="/assets/images/icons/Gamesbybrandon logo 128x128.png" alt="Games By Brandon Logo" class="brand-logo" />
+      <h1>PACKAGE PANIC</h1>
+    </div>
     <div class="account-info">
       <div id="user-info" style="display: none;"></div>
       <div id="account-action">Login / Create Account</div>
@@ -258,6 +287,10 @@
         <a href="/pages/disclaimer.html">Disclaimer</a>
       </div>
       <p class="footer-disclaimer">Not affiliated with any third-party platforms. This site is independently operated for the game <strong>Package Panic</strong>.</p>
+      <div class="footer-branding">
+        <p>Created and published by:</p>
+        <img src="/assets/images/icons/Gamesbybrandon logo 128x128.png" alt="Games By Brandon Logo" class="footer-logo" />
+      </div>
     </div>
   </footer>
 
