@@ -26,7 +26,8 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       const accountAction = document.getElementById("account-action");
-      const userInfo = document.getElementById("user-info");
+      const usernameBox = document.getElementById("username-box");
+      const awardsBox = document.getElementById("awards-box");
 
       onAuthStateChanged(auth, async (user) => {
         if (user) {
@@ -38,8 +39,11 @@
             const username = data.username || "User";
             const awards = data.awards || [];
 
-            userInfo.style.display = "block";
-            userInfo.innerHTML = `Username: <strong>${username}</strong><br />Awards: ${awards.join(" ")}`;
+            usernameBox.style.display = "block";
+            usernameBox.innerHTML = `<strong>${username}</strong>`;
+
+            awardsBox.style.display = "block";
+            awardsBox.innerHTML = `${awards.join(" ")}`;
 
             accountAction.textContent = "Log Out";
             accountAction.style.cursor = "pointer";
@@ -49,7 +53,8 @@
             };
           }
         } else {
-          userInfo.style.display = "none";
+          usernameBox.style.display = "none";
+          awardsBox.style.display = "none";
           accountAction.textContent = "Login / Create Account";
           accountAction.style.cursor = "pointer";
           accountAction.onclick = () => {
@@ -59,16 +64,52 @@
       });
     });
   </script>
+
+  <style>
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #111;
+      color: white;
+    }
+
+    #username-box {
+      font-size: 2.2rem;
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    #awards-box {
+      font-size: 1.5rem;
+      text-align: right;
+      padding-right: 15px;
+    }
+
+    .account-info {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    #account-action {
+      font-size: 1rem;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <div class="header">
-    <div><h1>PACKAGE PANIC</h1></div>
+    <div>
+      <h1>PACKAGE PANIC</h1>
+    </div>
+    <div id="username-box" style="display: none;"></div>
+    <div id="awards-box" style="display: none;"></div>
     <div class="account-info">
       <div id="account-action">Login / Create Account</div>
-      <div id="user-info" style="display: none;">
-        Username: <strong>Player1</strong><br />
-        Awards: 🏆 🎖️
-      </div>
     </div>
   </div>
 
@@ -144,7 +185,6 @@
     </div>
   </footer>
 
-  <!-- Fallback click override just in case anything blocks default navigation -->
   <script>
     document.querySelectorAll('.menu-btn').forEach(btn => {
       btn.addEventListener('click', e => {
