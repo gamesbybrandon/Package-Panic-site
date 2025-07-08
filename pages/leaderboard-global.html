@@ -60,10 +60,9 @@
 
     .awards-cell {
       display: flex;
-      justify-content: center;
-      flex-wrap: nowrap;
-      gap: 4px;
-      padding: 6px 0;
+      justify-content: space-between;
+      gap: 6px;
+      min-height: 44px;
     }
 
     .award-icon {
@@ -109,7 +108,7 @@
         </tr>
       </thead>
       <tbody id="leaderboard-body">
-        <!-- Dynamically populated rows will appear here -->
+        <!-- Populated by JS -->
       </tbody>
     </table>
 
@@ -120,17 +119,14 @@
   </div>
 
   <script>
-    // === WEEK DISPLAY ===
     function getCurrentWeekNumber() {
       const now = new Date();
       const jan1 = new Date(now.getFullYear(), 0, 1);
       const days = Math.floor((now - jan1) / 86400000);
       return Math.ceil((days + jan1.getDay() + 1) / 7);
     }
-
     document.getElementById("week-display").textContent = `Week ${getCurrentWeekNumber()}`;
 
-    // === PAGINATION SETUP ===
     let currentPage = 0;
     const rowsPerPage = 25;
 
@@ -138,10 +134,29 @@
     const prevBtn = document.getElementById("prev-page");
     const nextBtn = document.getElementById("next-page");
 
-    // === DATA (to be replaced with real user data from backend) ===
-    const leaderboardData = []; // Real players will populate this
+    const allAwardSlots = ['A','B','C','D','E','F','G','H','I','J','K','L'];
 
-    // === RENDER PAGE FUNCTION ===
+    // === MOCK DATA ===
+    const leaderboardData = Array.from({ length: 25 }, (_, i) => {
+      const awardCount = Math.floor(Math.random() * 10) + 3;
+      const filledSlots = [...allAwardSlots]
+        .sort(() => 0.5 - Math.random())
+        .slice(0, awardCount)
+        .sort((a, b) => allAwardSlots.indexOf(a) - allAwardSlots.indexOf(b));
+
+      const awards = allAwardSlots.map(letter =>
+        filledSlots.includes(letter) ? `/images/icons/award_${letter}.png` : null
+      );
+
+      return {
+        rank: i + 1,
+        level: Math.floor(Math.random() * 50) + 1,
+        panic: Math.floor(Math.random() * 100),
+        username: `User_${1000 + i}`,
+        awards: awards,
+      };
+    });
+
     function renderPage(page) {
       leaderboardBody.innerHTML = "";
 
@@ -149,17 +164,19 @@
       const end = start + rowsPerPage;
       const pageRows = leaderboardData.slice(start, end);
 
-      pageRows.forEach((player, index) => {
+      pageRows.forEach((player) => {
         const row = document.createElement("tr");
 
+        const awardIcons = player.awards
+          .map(a => a ? `<img src="${a}" class="award-icon" />` : `<div style="width:44px;height:40px;"></div>`)
+          .join("");
+
         row.innerHTML = `
-          <td>${start + index + 1}</td>
+          <td>${player.rank}</td>
           <td>${player.level}</td>
           <td>${player.panic}%</td>
           <td>${player.username}</td>
-          <td class="awards-cell">
-            ${player.awards.map(img => `<img src="${img}" class="award-icon" />`).join("")}
-          </td>
+          <td class="awards-cell">${awardIcons}</td>
         `;
 
         leaderboardBody.appendChild(row);
@@ -169,7 +186,6 @@
       nextBtn.disabled = end >= leaderboardData.length;
     }
 
-    // === PAGINATION EVENTS ===
     prevBtn.addEventListener("click", () => {
       if (currentPage > 0) {
         currentPage--;
@@ -182,7 +198,6 @@
       renderPage(currentPage);
     });
 
-    // === INITIAL LOAD ===
     renderPage(currentPage);
   </script>
 </body>
