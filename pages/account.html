@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account - Package Panic</title>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVk9j5oxhJ8Dp21fNHyb2q_GLUoA9q5q8",
+      authDomain: "packagepanic-8d51b.firebaseapp.com",
+      projectId: "packagepanic-8d51b",
+      storageBucket: "packagepanic-8d51b.firebasestorage.app",
+      messagingSenderId: "1013005031900",
+      appId: "1:1013005031900:web:3a348735c268ac6ece9719"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let isCreating = false;
+
+    window.toggleMode = () => {
+      isCreating = !isCreating;
+      document.getElementById("username-field").style.display = isCreating ? "block" : "none";
+      document.getElementById("toggleText").textContent = isCreating ? "Already have an account? Log In" : "Don't have an account? Create One";
+      document.getElementById("submitBtn").textContent = isCreating ? "Create Account" : "Log In";
+    };
+
+    window.handleSubmit = async () => {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const username = document.getElementById("username").value.trim();
+
+      try {
+        let userCredential;
+        if (isCreating) {
+          if (!username) return alert("Please enter a username.");
+          userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          const uid = userCredential.user.uid;
+          await setDoc(doc(db, "users", uid), {
+            username: username,
+            awards: [],
+            isPremium: false
+          });
+        } else {
+          userCredential = await signInWithEmailAndPassword(auth, email, password);
+        }
+
+        localStorage.setItem("loggedIn", "true");
+        window.location.href = "/index.html";
+      } catch (error) {
+        alert(error.message);
+      }
+    };
+  </script>
+</head>
+<body>
+  <div class="header">
+    <div><h1>PACKAGE PANIC</h1></div>
+    <div class="account-info">Log In / Create Account</div>
+  </div>
+
+  <div class="container">
+    <div class="section">
+      <h2>Account Access</h2>
+      <label>Email:</label><br />
+      <input type="email" id="email" /><br /><br />
+
+      <div id="username-field" style="display: none;">
+        <label>Username:</label><br />
+        <input type="text" id="username" /><br /><br />
+      </div>
+
+      <label>Password:</label><br />
+      <input type="password" id="password" /><br /><br />
+
+      <button onclick="handleSubmit()" id="submitBtn">Log In</button>
+      <p style="margin-top: 10px; cursor: pointer; text-decoration: underline;" onclick="toggleMode()" id="toggleText">
+        Don't have an account? Create One
+      </p>
+    </div>
+  </div>
+</body>
+</html>
