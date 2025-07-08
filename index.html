@@ -75,7 +75,7 @@
       apiKey: "AIzaSyDVk9j5oxhJ8Dp21fNHyb2q_GLUoA9q5q8",
       authDomain: "packagepanic-8d51b.firebaseapp.com",
       projectId: "packagepanic-8d51b",
-      storageBucket: "packagepanic-8d51b.firebasestorage.app",
+      storageBucket: "packagepanic-8d51b.appspot.com",
       messagingSenderId: "1013005031900",
       appId: "1:1013005031900:web:3a348735c268ac6ece9719"
     };
@@ -91,15 +91,15 @@
         if (awards[field]) icons.push(`/assets/icons/${filename}`);
       };
 
-      const tierSelect = (tierFields) => {
-        for (let i = tierFields.length - 1; i >= 0; i--) {
-          if (awards[tierFields[i].field]) return tierFields[i].filename;
+      const tierSelect = (tiers) => {
+        for (let i = tiers.length - 1; i >= 0; i--) {
+          if (awards[tiers[i].field]) return tiers[i].filename;
         }
         return null;
       };
 
       const order = [
-        { type: "single", field: "juggernaut", filename: "Award Juggernaut Star.png" },
+        { type: "single", field: "juggernaut_award", filename: "Award Juggernaut Star.png" },
         { type: "tiered", fields: [
           { field: "package_bronze", filename: "Award Package Bronze.png" },
           { field: "package_silver", filename: "Award Package Silver.png" },
