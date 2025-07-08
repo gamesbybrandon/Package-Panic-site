@@ -23,6 +23,10 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    const swearWords = [
+      "fuck", "shit", "bitch", "cunt", "asshole", "nigger", "fag", "dick", "piss", "cock", "whore", "slut", "rape"
+    ];
+
     let isCreating = false;
 
     window.toggleMode = () => {
@@ -35,21 +39,26 @@
     window.handleSubmit = async () => {
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
-      const username = document.getElementById("username").value.trim();
+      const username = document.getElementById("username").value.trim().toLowerCase();
 
       try {
-        let userCredential;
         if (isCreating) {
           if (!username) return alert("Please enter a username.");
-          userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          if (username.length > 20) return alert("Username must be 20 characters or fewer.");
+          if (swearWords.some(word => username.includes(word))) {
+            return alert("Username contains inappropriate language. Please choose something else.");
+          }
+
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
           const uid = userCredential.user.uid;
+
           await setDoc(doc(db, "users", uid), {
             username: username,
             awards: [],
             isPremium: false
           });
         } else {
-          userCredential = await signInWithEmailAndPassword(auth, email, password);
+          await signInWithEmailAndPassword(auth, email, password);
         }
 
         localStorage.setItem("loggedIn", "true");
@@ -74,7 +83,7 @@
 
       <div id="username-field" style="display: none;">
         <label>Username:</label><br />
-        <input type="text" id="username" /><br /><br />
+        <input type="text" id="username" maxlength="20" /><br /><br />
       </div>
 
       <label>Password:</label><br />
