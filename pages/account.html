@@ -7,8 +7,16 @@
   <link rel="stylesheet" href="/assets/css/style.css" />
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      setDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDVk9j5oxhJ8Dp21fNHyb2q_GLUoA9q5q8",
@@ -24,7 +32,8 @@
     const db = getFirestore(app);
 
     const swearWords = [
-      "fuck", "shit", "bitch", "cunt", "asshole", "nigger", "fag", "dick", "piss", "cock", "whore", "slut", "rape"
+      "fuck", "shit", "bitch", "cunt", "asshole", "nigger", "fag",
+      "dick", "piss", "cock", "whore", "slut", "rape"
     ];
 
     let isCreating = false;
@@ -32,14 +41,19 @@
     window.toggleMode = () => {
       isCreating = !isCreating;
       document.getElementById("username-field").style.display = isCreating ? "block" : "none";
-      document.getElementById("toggleText").textContent = isCreating ? "Already have an account? Log In" : "Don't have an account? Create One";
-      document.getElementById("submitBtn").textContent = isCreating ? "Create Account" : "Log In";
+      document.getElementById("toggleText").textContent = isCreating
+        ? "Already have an account? Log In"
+        : "Don't have an account? Create One";
+      document.getElementById("submitBtn").textContent = isCreating
+        ? "Create Account"
+        : "Log In";
     };
 
     window.handleSubmit = async () => {
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
-      const username = document.getElementById("username").value.trim().toLowerCase();
+      const rawUsername = document.getElementById("username").value.trim();
+      const username = rawUsername.toLowerCase();
 
       try {
         if (isCreating) {
