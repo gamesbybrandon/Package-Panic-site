@@ -13,6 +13,7 @@
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
     }
+
     .leaderboard-container {
       max-width: 1200px;
       margin: 80px auto;
@@ -21,46 +22,74 @@
       border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.15);
     }
+
     h1 {
       text-align: center;
       margin-bottom: 10px;
       font-size: 2rem;
       text-decoration: underline;
     }
+
     #week-display {
       text-align: center;
       font-size: 1.2rem;
       font-weight: bold;
       margin-bottom: 20px;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: center;
     }
+
     th, td {
       padding: 12px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       vertical-align: middle;
     }
+
     th {
       background-color: rgba(255, 255, 255, 0.1);
       font-weight: bold;
     }
+
     tr:nth-child(even) {
       background-color: rgba(255, 255, 255, 0.04);
     }
+
     .awards-cell {
       display: flex;
-      justify-content: center;
+      justify-content: flex-start;
       flex-wrap: wrap;
       gap: 4px;
       padding: 6px 0;
     }
+
     .award-icon {
       width: 44px;
       height: 40px;
       object-fit: contain;
+    }
+
+    .pagination {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .pagination button {
+      padding: 8px 16px;
+      margin: 0 10px;
+      font-size: 1rem;
+      background-color: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 1px solid white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .pagination button:hover {
+      background-color: rgba(255, 255, 255, 0.3);
     }
   </style>
 </head>
@@ -68,6 +97,7 @@
   <div class="leaderboard-container">
     <h1>Global Leaderboard</h1>
     <div id="week-display">Loading Week...</div>
+
     <table>
       <thead>
         <tr>
@@ -78,212 +108,17 @@
           <th>Awards</th>
         </tr>
       </thead>
-      <tbody>
-        
-        <tr>
-          <td>1</td>
-          <td>10</td>
-          <td>82%</td>
-          <td>SortMaster</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Bronze Package.png" class="award-icon" /><img src="/assets/images/icons/Award Code of Arms.png" class="award-icon" /><img src="/assets/images/icons/Award Silver Package.png" class="award-icon" /><img src="/assets/images/icons/Award Retry Junky.png" class="award-icon" /><img src="/assets/images/icons/Award Thinking outside the box.png" class="award-icon" /><img src="/assets/images/icons/Award Used Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Shiny Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Juggernaut Star.png" class="award-icon" /><img src="/assets/images/icons/Award Panic Survivor.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>2</td>
-          <td>20</td>
-          <td>91%</td>
-          <td>BoxHero88</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Thinking outside the box.png" class="award-icon" /><img src="/assets/images/icons/Award Shiny Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Antique Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Gold Package.png" class="award-icon" /><img src="/assets/images/icons/Award Bronze Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Bronze Package.png" class="award-icon" /><img src="/assets/images/icons/Award Panic Survivor.png" class="award-icon" /><img src="/assets/images/icons/Award Frank.png" class="award-icon" /><img src="/assets/images/icons/Award Lab Rat.png" class="award-icon" /><img src="/assets/images/icons/Award Retry Junky.png" class="award-icon" /><img src="/assets/images/icons/Award Juggernaut Star.png" class="award-icon" /><img src="/assets/images/icons/Award Gold Cup.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>3</td>
-          <td>17</td>
-          <td>82%</td>
-          <td>PanicPal</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Shiny Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Platinum Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Frank.png" class="award-icon" /><img src="/assets/images/icons/Award Gold Package.png" class="award-icon" /><img src="/assets/images/icons/Award Juggernaut Star.png" class="award-icon" /><img src="/assets/images/icons/Award Bronze Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Bronze Package.png" class="award-icon" /><img src="/assets/images/icons/Award Binge Watcher.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>4</td>
-          <td>44</td>
-          <td>46%</td>
-          <td>ZonedOut</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Bronze Package.png" class="award-icon" /><img src="/assets/images/icons/Award Shiny Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Lab Rat.png" class="award-icon" /><img src="/assets/images/icons/Award Juggernaut Star.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>5</td>
-          <td>31</td>
-          <td>65%</td>
-          <td>ShapeShifter</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Royal Artist.png" class="award-icon" /><img src="/assets/images/icons/Award Silver Package.png" class="award-icon" /><img src="/assets/images/icons/Award Panic Survivor.png" class="award-icon" /><img src="/assets/images/icons/Award Antique Conveyor.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>6</td>
-          <td>14</td>
-          <td>29%</td>
-          <td>CourierKing</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Panic Survivor.png" class="award-icon" /><img src="/assets/images/icons/Award Thinking outside the box.png" class="award-icon" /><img src="/assets/images/icons/Award Antique Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Platinum Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Gold Package.png" class="award-icon" /><img src="/assets/images/icons/Award Code of Arms.png" class="award-icon" /><img src="/assets/images/icons/Award Frank.png" class="award-icon" /><img src="/assets/images/icons/Award Used Conveyor.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>7</td>
-          <td>48</td>
-          <td>30%</td>
-          <td>DropLord</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Juggernaut Star.png" class="award-icon" /><img src="/assets/images/icons/Award Silver Package.png" class="award-icon" /><img src="/assets/images/icons/Award Bronze Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Binge Watcher.png" class="award-icon" /><img src="/assets/images/icons/Award Thinking outside the box.png" class="award-icon" /><img src="/assets/images/icons/Award Antique Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Gold Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Gold Package.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>8</td>
-          <td>16</td>
-          <td>63%</td>
-          <td>ParcelPro</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Used Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Juggernaut Star.png" class="award-icon" /><img src="/assets/images/icons/Award Code of Arms.png" class="award-icon" /><img src="/assets/images/icons/Award Antique Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Panic Survivor.png" class="award-icon" /><img src="/assets/images/icons/Award Silver Package.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>9</td>
-          <td>12</td>
-          <td>49%</td>
-          <td>MissNoMore</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Frank.png" class="award-icon" /><img src="/assets/images/icons/Award Royal Artist.png" class="award-icon" /><img src="/assets/images/icons/Award Bronze Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Retry Junky.png" class="award-icon" /><img src="/assets/images/icons/Award Silver Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Antique Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Bronze Package.png" class="award-icon" /><img src="/assets/images/icons/Award Thinking outside the box.png" class="award-icon" /><img src="/assets/images/icons/Award Binge Watcher.png" class="award-icon" /><img src="/assets/images/icons/Award Gold Cup.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>10</td>
-          <td>48</td>
-          <td>0%</td>
-          <td>LevelCrusher</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Platinum Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Frank.png" class="award-icon" /><img src="/assets/images/icons/Award Antique Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Royal Artist.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>11</td>
-          <td>36</td>
-          <td>69%</td>
-          <td>SortSavage</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Gold Package.png" class="award-icon" /><img src="/assets/images/icons/Award Juggernaut Star.png" class="award-icon" /><img src="/assets/images/icons/Award Bronze Package.png" class="award-icon" /><img src="/assets/images/icons/Award Code of Arms.png" class="award-icon" /><img src="/assets/images/icons/Award Retry Junky.png" class="award-icon" /><img src="/assets/images/icons/Award Shiny Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Frank.png" class="award-icon" /><img src="/assets/images/icons/Award Used Conveyor.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>12</td>
-          <td>35</td>
-          <td>60%</td>
-          <td>PanicTamer</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Bronze Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Silver Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Gold Cup.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>13</td>
-          <td>40</td>
-          <td>71%</td>
-          <td>SwiftSorta</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Juggernaut Star.png" class="award-icon" /><img src="/assets/images/icons/Award Antique Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Shiny Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Silver Package.png" class="award-icon" /><img src="/assets/images/icons/Award Retry Junky.png" class="award-icon" /><img src="/assets/images/icons/Award Silver Cup.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>14</td>
-          <td>26</td>
-          <td>20%</td>
-          <td>PackagePilot</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Retry Junky.png" class="award-icon" /><img src="/assets/images/icons/Award Antique Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Bronze Package.png" class="award-icon" /><img src="/assets/images/icons/Award Frank.png" class="award-icon" /><img src="/assets/images/icons/Award Gold Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Lab Rat.png" class="award-icon" /><img src="/assets/images/icons/Award Silver Package.png" class="award-icon" /><img src="/assets/images/icons/Award Binge Watcher.png" class="award-icon" /><img src="/assets/images/icons/Award Used Conveyor.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>15</td>
-          <td>50</td>
-          <td>12%</td>
-          <td>BinBeast</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Panic Survivor.png" class="award-icon" /><img src="/assets/images/icons/Award Bronze Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Gold Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Thinking outside the box.png" class="award-icon" /><img src="/assets/images/icons/Award Retry Junky.png" class="award-icon" /><img src="/assets/images/icons/Award Lab Rat.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>16</td>
-          <td>16</td>
-          <td>44%</td>
-          <td>Sorterella</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Juggernaut Star.png" class="award-icon" /><img src="/assets/images/icons/Award Frank.png" class="award-icon" /><img src="/assets/images/icons/Award Gold Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Platinum Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Gold Package.png" class="award-icon" /><img src="/assets/images/icons/Award Used Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Binge Watcher.png" class="award-icon" /><img src="/assets/images/icons/Award Code of Arms.png" class="award-icon" /><img src="/assets/images/icons/Award Silver Package.png" class="award-icon" /><img src="/assets/images/icons/Award Retry Junky.png" class="award-icon" /><img src="/assets/images/icons/Award Shiny Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Bronze Cup.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>17</td>
-          <td>23</td>
-          <td>20%</td>
-          <td>WrongDropWhom</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Thinking outside the box.png" class="award-icon" /><img src="/assets/images/icons/Award Bronze Package.png" class="award-icon" /><img src="/assets/images/icons/Award Platinum Cup.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>18</td>
-          <td>38</td>
-          <td>96%</td>
-          <td>StackNCrack</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Gold Package.png" class="award-icon" /><img src="/assets/images/icons/Award Frank.png" class="award-icon" /><img src="/assets/images/icons/Award Lab Rat.png" class="award-icon" /><img src="/assets/images/icons/Award Royal Artist.png" class="award-icon" /><img src="/assets/images/icons/Award Used Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Bronze Package.png" class="award-icon" /><img src="/assets/images/icons/Award Silver Package.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>19</td>
-          <td>34</td>
-          <td>24%</td>
-          <td>AlienDumper</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Gold Package.png" class="award-icon" /><img src="/assets/images/icons/Award Lab Rat.png" class="award-icon" /><img src="/assets/images/icons/Award Shiny Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Retry Junky.png" class="award-icon" /><img src="/assets/images/icons/Award Silver Package.png" class="award-icon" /><img src="/assets/images/icons/Award Juggernaut Star.png" class="award-icon" /><img src="/assets/images/icons/Award Binge Watcher.png" class="award-icon" /><img src="/assets/images/icons/Award Antique Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Code of Arms.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>20</td>
-          <td>37</td>
-          <td>40%</td>
-          <td>TimeOutFrank</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Used Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Bronze Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Code of Arms.png" class="award-icon" /><img src="/assets/images/icons/Award Silver Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Shiny Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Juggernaut Star.png" class="award-icon" /><img src="/assets/images/icons/Award Royal Artist.png" class="award-icon" /><img src="/assets/images/icons/Award Panic Survivor.png" class="award-icon" /><img src="/assets/images/icons/Award Frank.png" class="award-icon" /><img src="/assets/images/icons/Award Gold Package.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>21</td>
-          <td>40</td>
-          <td>50%</td>
-          <td>RetryRoy</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Code of Arms.png" class="award-icon" /><img src="/assets/images/icons/Award Binge Watcher.png" class="award-icon" /><img src="/assets/images/icons/Award Retry Junky.png" class="award-icon" /><img src="/assets/images/icons/Award Frank.png" class="award-icon" /><img src="/assets/images/icons/Award Thinking outside the box.png" class="award-icon" /><img src="/assets/images/icons/Award Silver Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Antique Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Platinum Cup.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>22</td>
-          <td>30</td>
-          <td>55%</td>
-          <td>FastFlicker</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Lab Rat.png" class="award-icon" /><img src="/assets/images/icons/Award Gold Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Panic Survivor.png" class="award-icon" /><img src="/assets/images/icons/Award Platinum Cup.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>23</td>
-          <td>15</td>
-          <td>74%</td>
-          <td>GlowUpChamp</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Retry Junky.png" class="award-icon" /><img src="/assets/images/icons/Award Frank.png" class="award-icon" /><img src="/assets/images/icons/Award Panic Survivor.png" class="award-icon" /><img src="/assets/images/icons/Award Used Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Juggernaut Star.png" class="award-icon" /><img src="/assets/images/icons/Award Gold Package.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>24</td>
-          <td>31</td>
-          <td>6%</td>
-          <td>ClipMate</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Royal Artist.png" class="award-icon" /><img src="/assets/images/icons/Award Code of Arms.png" class="award-icon" /><img src="/assets/images/icons/Award Gold Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Bronze Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Bronze Package.png" class="award-icon" /><img src="/assets/images/icons/Award Used Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Binge Watcher.png" class="award-icon" /><img src="/assets/images/icons/Award Juggernaut Star.png" class="award-icon" /><img src="/assets/images/icons/Award Silver Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Platinum Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Frank.png" class="award-icon" /></td>
-        </tr>
-    
-        <tr>
-          <td>25</td>
-          <td>22</td>
-          <td>23%</td>
-          <td>Streakzilla</td>
-          <td class="awards-cell"><img src="/assets/images/icons/Award Bronze Package.png" class="award-icon" /><img src="/assets/images/icons/Award Silver Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Gold Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Platinum Cup.png" class="award-icon" /><img src="/assets/images/icons/Award Binge Watcher.png" class="award-icon" /><img src="/assets/images/icons/Award Code of Arms.png" class="award-icon" /><img src="/assets/images/icons/Award Juggernaut Star.png" class="award-icon" /><img src="/assets/images/icons/Award Thinking outside the box.png" class="award-icon" /><img src="/assets/images/icons/Award Antique Conveyor.png" class="award-icon" /><img src="/assets/images/icons/Award Gold Package.png" class="award-icon" /><img src="/assets/images/icons/Award Shiny Conveyor.png" class="award-icon" /></td>
-        </tr>
-    
-      </tbody>
+      <tbody id="leaderboard-body"></tbody>
     </table>
+
+    <div class="pagination">
+      <button id="prev-page" disabled>Previous</button>
+      <button id="next-page">Next</button>
+    </div>
   </div>
+
   <script>
+    // === WEEK DISPLAY ===
     function getCurrentWeekNumber() {
       const now = new Date();
       const jan1 = new Date(now.getFullYear(), 0, 1);
@@ -291,6 +126,103 @@
       return Math.ceil((days + jan1.getDay() + 1) / 7);
     }
     document.getElementById("week-display").textContent = `Week ${getCurrentWeekNumber()}`;
+
+    // === MOCK DATA WITH HIGHEST-TIER LOGIC ===
+    const leaderboardData = [];
+    const usernames = [
+      "Player1", "Player2", "Player3", "Player4", "Player5", "Player6", "Player7", "Player8",
+      "Player9", "Player10", "Player11", "Player12", "Player13", "Player14", "Player15",
+      "Player16", "Player17", "Player18", "Player19", "Player20", "Player21", "Player22",
+      "Player23", "Player24", "Player25"
+    ];
+
+    const awardTiers = {
+      "Package": ["Award Bronze Package.png", "Award Silver Package.png", "Award Gold Package.png", "Award Rose Gold Package.png"],
+      "Conveyor": ["Award Shiny Conveyor.png", "Award Used Conveyor.png", "Award Rusty Conveyor.png"],
+      "Cup": ["Award Bronze Cup.png", "Award Silver Cup.png", "Award Gold Cup.png", "Award Platinum Cup.png"]
+    };
+
+    const otherAwards = [
+      "Award Lab Rat.png",
+      "Award Juggernaut.png",
+      "Award Retry Junky.png",
+      "Award Binge Watcher.png",
+      "Award Code of Arms.png",
+      "Award Royal Artist.png",
+      "Award Thinking Outside the Box.png",
+      "Award Frank Alien.png"
+    ];
+
+    function pickTopTier(group, index) {
+      return awardTiers[group][Math.min(index, awardTiers[group].length - 1)];
+    }
+
+    for (let i = 0; i < usernames.length; i++) {
+      const playerAwards = [];
+
+      // Tiered Awards (only highest tier shown per group)
+      if (Math.random() < 0.9) playerAwards.push(pickTopTier("Package", Math.floor(Math.random() * 4)));
+      if (Math.random() < 0.8) playerAwards.push(pickTopTier("Conveyor", Math.floor(Math.random() * 3)));
+      if (Math.random() < 0.9) playerAwards.push(pickTopTier("Cup", Math.floor(Math.random() * 4)));
+
+      // Other Unique Awards
+      otherAwards.forEach(award => {
+        if (Math.random() < 0.5) playerAwards.push(award);
+      });
+
+      leaderboardData.push({
+        rank: i + 1,
+        level: Math.floor(Math.random() * 50) + 1,
+        panic: Math.floor(Math.random() * 100),
+        username: usernames[i],
+        awards: playerAwards
+      });
+    }
+
+    // === PAGINATION ===
+    let currentPage = 0;
+    const rowsPerPage = 25;
+    const leaderboardBody = document.getElementById("leaderboard-body");
+    const prevBtn = document.getElementById("prev-page");
+    const nextBtn = document.getElementById("next-page");
+
+    function renderPage(page) {
+      leaderboardBody.innerHTML = "";
+      const start = page * rowsPerPage;
+      const end = start + rowsPerPage;
+      const pageRows = leaderboardData.slice(start, end);
+
+      pageRows.forEach(player => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${player.rank}</td>
+          <td>${player.level}</td>
+          <td>${player.panic}%</td>
+          <td>${player.username}</td>
+          <td class="awards-cell">
+            ${player.awards.map(img => `<img src="/assets/awards/${img}" class="award-icon" />`).join("")}
+          </td>
+        `;
+        leaderboardBody.appendChild(row);
+      });
+
+      prevBtn.disabled = currentPage === 0;
+      nextBtn.disabled = end >= leaderboardData.length;
+    }
+
+    prevBtn.addEventListener("click", () => {
+      if (currentPage > 0) {
+        currentPage--;
+        renderPage(currentPage);
+      }
+    });
+
+    nextBtn.addEventListener("click", () => {
+      currentPage++;
+      renderPage(currentPage);
+    });
+
+    renderPage(currentPage);
   </script>
 </body>
 </html>
