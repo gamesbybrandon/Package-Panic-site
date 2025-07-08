@@ -60,7 +60,7 @@
 
     .awards-cell {
       display: flex;
-      justify-content: flex-start;
+      justify-content: flex-end;
       flex-wrap: wrap;
       gap: 4px;
       padding: 6px 0;
@@ -108,7 +108,9 @@
           <th>Awards</th>
         </tr>
       </thead>
-      <tbody id="leaderboard-body"></tbody>
+      <tbody id="leaderboard-body">
+        <!-- Data rows will populate here -->
+      </tbody>
     </table>
 
     <div class="pagination">
@@ -118,73 +120,59 @@
   </div>
 
   <script>
-    // === WEEK DISPLAY ===
     function getCurrentWeekNumber() {
       const now = new Date();
       const jan1 = new Date(now.getFullYear(), 0, 1);
       const days = Math.floor((now - jan1) / 86400000);
       return Math.ceil((days + jan1.getDay() + 1) / 7);
     }
+
     document.getElementById("week-display").textContent = `Week ${getCurrentWeekNumber()}`;
 
-    // === MOCK DATA WITH HIGHEST-TIER LOGIC ===
-    const leaderboardData = [];
-    const usernames = [
-      "Player1", "Player2", "Player3", "Player4", "Player5", "Player6", "Player7", "Player8",
-      "Player9", "Player10", "Player11", "Player12", "Player13", "Player14", "Player15",
-      "Player16", "Player17", "Player18", "Player19", "Player20", "Player21", "Player22",
-      "Player23", "Player24", "Player25"
-    ];
-
-    const awardTiers = {
-      "Package": ["Award Bronze Package.png", "Award Silver Package.png", "Award Gold Package.png", "Award Rose Gold Package.png"],
-      "Conveyor": ["Award Shiny Conveyor.png", "Award Used Conveyor.png", "Award Rusty Conveyor.png"],
-      "Cup": ["Award Bronze Cup.png", "Award Silver Cup.png", "Award Gold Cup.png", "Award Platinum Cup.png"]
-    };
-
-    const otherAwards = [
-      "Award Lab Rat.png",
-      "Award Juggernaut.png",
-      "Award Retry Junky.png",
-      "Award Binge Watcher.png",
-      "Award Code of Arms.png",
-      "Award Royal Artist.png",
-      "Award Thinking Outside the Box.png",
-      "Award Frank Alien.png"
-    ];
-
-    function pickTopTier(group, index) {
-      return awardTiers[group][Math.min(index, awardTiers[group].length - 1)];
-    }
-
-    for (let i = 0; i < usernames.length; i++) {
-      const playerAwards = [];
-
-      // Tiered Awards (only highest tier shown per group)
-      if (Math.random() < 0.9) playerAwards.push(pickTopTier("Package", Math.floor(Math.random() * 4)));
-      if (Math.random() < 0.8) playerAwards.push(pickTopTier("Conveyor", Math.floor(Math.random() * 3)));
-      if (Math.random() < 0.9) playerAwards.push(pickTopTier("Cup", Math.floor(Math.random() * 4)));
-
-      // Other Unique Awards
-      otherAwards.forEach(award => {
-        if (Math.random() < 0.5) playerAwards.push(award);
-      });
-
-      leaderboardData.push({
-        rank: i + 1,
-        level: Math.floor(Math.random() * 50) + 1,
-        panic: Math.floor(Math.random() * 100),
-        username: usernames[i],
-        awards: playerAwards
-      });
-    }
-
-    // === PAGINATION ===
     let currentPage = 0;
     const rowsPerPage = 25;
     const leaderboardBody = document.getElementById("leaderboard-body");
     const prevBtn = document.getElementById("prev-page");
     const nextBtn = document.getElementById("next-page");
+
+    const leaderboardData = []; // Placeholder – to be filled from backend
+
+    const AWARD_PRIORITY = {
+      "juggernaut": "juggernaut.png",
+      "package_gold": "package_gold.png",
+      "package_silver": "package_silver.png",
+      "package_bronze": "package_bronze.png",
+      "retry": "retry.png",
+      "conveyor_antique": "conveyor_antique.png",
+      "conveyor_used": "conveyor_used.png",
+      "conveyor_shiny": "conveyor_shiny.png",
+      "panic": "panic.png",
+      "code": "code.png",
+      "labrat": "labrat.png",
+      "ads": "ads.png",
+      "cup_platinum": "cup_platinum.png",
+      "cup_gold": "cup_gold.png",
+      "cup_silver": "cup_silver.png",
+      "cup_bronze": "cup_bronze.png",
+      "idea": "idea.png",
+      "artist": "artist.png",
+      "alien": "alien.png"
+    };
+
+    const AWARD_SLOTS = ["juggernaut", "package", "retry", "conveyor", "panic", "code", "labrat", "ads", "cup", "idea", "artist", "alien"];
+
+    const TIERED_AWARDS = {
+      package: ["package_bronze", "package_silver", "package_gold"],
+      conveyor: ["conveyor_shiny", "conveyor_used", "conveyor_antique"],
+      cup: ["cup_bronze", "cup_silver", "cup_gold", "cup_platinum"]
+    };
+
+    function getHighestTier(owned, tierList) {
+      for (let i = tierList.length - 1; i >= 0; i--) {
+        if (owned.includes(tierList[i])) return tierList[i];
+      }
+      return null;
+    }
 
     function renderPage(page) {
       leaderboardBody.innerHTML = "";
@@ -192,17 +180,30 @@
       const end = start + rowsPerPage;
       const pageRows = leaderboardData.slice(start, end);
 
-      pageRows.forEach(player => {
+      pageRows.forEach((player) => {
         const row = document.createElement("tr");
+
+        // Fill out 12-slot award layout
+        const icons = [];
+
+        for (const key of AWARD_SLOTS) {
+          if (TIERED_AWARDS[key]) {
+            const best = getHighestTier(player.awards, TIERED_AWARDS[key]);
+            icons.push(best ? `<img src="/assets/awards/${best}" class="award-icon" />` : `<div style="width:44px;height:40px;"></div>`);
+          } else {
+            const award = key in AWARD_PRIORITY && player.awards.includes(key) ? `<img src="/assets/awards/${AWARD_PRIORITY[key]}" class="award-icon" />` : `<div style="width:44px;height:40px;"></div>`;
+            icons.push(award);
+          }
+        }
+
         row.innerHTML = `
           <td>${player.rank}</td>
           <td>${player.level}</td>
           <td>${player.panic}%</td>
           <td>${player.username}</td>
-          <td class="awards-cell">
-            ${player.awards.map(img => `<img src="/assets/awards/${img}" class="award-icon" />`).join("")}
-          </td>
+          <td class="awards-cell">${icons.join("")}</td>
         `;
+
         leaderboardBody.appendChild(row);
       });
 
@@ -226,4 +227,3 @@
   </script>
 </body>
 </html>
-
