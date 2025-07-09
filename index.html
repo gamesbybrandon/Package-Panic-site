@@ -95,7 +95,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDVk9j5oxhJ8Dp21fNHyb2q_GLUoA9q5q8",
@@ -110,38 +110,52 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    async function loadAwardDefinitions() {
-      const snapshot = await getDocs(collection(db, "award_definitions"));
-      const map = {};
-      snapshot.forEach(doc => map[doc.id] = doc.data());
-      return map;
-    }
-
-    window.loadAwardDefinitions = loadAwardDefinitions;
-
     function getAwardIcons(awards) {
       const icons = [];
-      const push = (file) => file && icons.push(`/assets/icons/${file}`);
 
-      const priority = [
-        "star_juggernaut",
-        "package_gold", "package_silver", "package_bronze",
-        "retry_junky",
-        "conveyor_shiny", "conveyor_used", "conveyor_antique",
-        "survivor_panic",
-        "code_of_arms",
-        "lab_rat",
-        "binoculars",
-        "cup_platinum", "cup_gold", "cup_silver", "cup_bronze",
-        "thinking_outside_the_box",
-        "royal_artist",
-        "alien_frank",
-        "binge_watcher"
-      ];
+      const push = (filename) => {
+        if (filename) icons.push(`/assets/icons/${filename}`);
+      };
 
-      priority.forEach(key => {
-        if (awards[key]) push(`Award ${awards[key]}.png`);
-      });
+      const tierCheck = (fields) => {
+        for (let i = 0; i < fields.length; i++) {
+          if (awards[fields[i].key]) return fields[i].file;
+        }
+        return null;
+      };
+
+      // A–L Order
+      push(awards["star_juggernaut"] ? "Award Juggernaut Star.png" : null); // A
+
+      push(tierCheck([ // B
+        { key: "package_gold", file: "Award Package Gold.png" },
+        { key: "package_silver", file: "Award Package Silver.png" },
+        { key: "package_bronze", file: "Award Package Bronze.png" },
+      ]));
+
+      push(awards["retry_junky"] ? "Award Retry Junky.png" : null); // C
+
+      push(tierCheck([ // D
+        { key: "conveyor_shiny", file: "Award Shiny Conveyor.png" },
+        { key: "conveyor_used", file: "Award Worn Conveyor.png" },
+        { key: "conveyor_antique", file: "Award Antique Conveyor.png" },
+      ]));
+
+      push(awards["survivor_panic"] ? "Award Panic Survivor.png" : null); // E
+      push(awards["code_of_arms"] ? "Award Code of Arms.png" : null); // F
+      push(awards["lab_rat"] ? "Award Lab Rat.png" : null); // G
+      push(awards["binoculars"] ? "Award Binoculars Ad Watch.png" : null); // H
+
+      push(tierCheck([ // I
+        { key: "cup_platinum", file: "Award Cup Platinum.png" },
+        { key: "cup_gold", file: "Award Cup Gold.png" },
+        { key: "cup_silver", file: "Award Cup Silver.png" },
+        { key: "cup_bronze", file: "Award Cup Bronze.png" },
+      ]));
+
+      push(awards["thinking_outside_the_box"] ? "Award Thinking Outside the Box.png" : null); // J
+      push(awards["royal_artist"] ? "Award Royal Artist.png" : null); // K
+      push(awards["alien_frank"] ? "Award Frank Alien.png" : null); // L
 
       return icons;
     }
@@ -186,7 +200,101 @@
     });
   </script>
 </head>
+
 <body>
-  <!-- ...body content stays unchanged... -->
+  <div class="header">
+    <div class="site-title">
+      <img src="/assets/images/icons/Gamesbybrandon logo 128x128.png" alt="Games By Brandon Logo" class="brand-logo" />
+      <h1>PACKAGE PANIC</h1>
+    </div>
+    <div class="account-info">
+      <div id="user-info" style="display: none;"></div>
+      <div id="account-action">Login / Create Account</div>
+    </div>
+  </div>
+
+  <div class="tagline">
+    You think you’ve got what it takes to out-sort the world? Put your skills to the test and see how you stack up on the leaderboard, compete daily for awards, and in quarterly contests to have your ideas and artwork added to the game! Best of luck to you and oh, try not to panic!
+  </div>
+
+  <div class="container">
+    <div class="section">
+      <h2>Leaderboards:</h2>
+      <div class="grid">
+        <a class="menu-btn" href="/pages/leaderboard-global.html">Global Leaderboard</a>
+        <a class="menu-btn" href="/pages/area51.html">Area51 Leaderboard</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Account:</h2>
+      <div class="grid">
+        <a class="menu-btn" href="/pages/stats.html">Stats</a>
+        <a class="menu-btn" href="/pages/awards.html">Awards</a>
+        <a class="menu-btn" href="/pages/settings.html">Settings</a>
+        <a class="menu-btn" href="/pages/premium-account.html">Premium Account</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Game:</h2>
+      <div class="grid">
+        <a class="menu-btn" href="/pages/how-to-play.html">How to Play</a>
+        <a class="menu-btn" href="/pages/return-to-app.html">Return to App</a>
+        <a class="menu-btn" href="/pages/download-app.html">Download App</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Discussion:</h2>
+      <div class="grid">
+        <a class="menu-btn" href="https://discord.gg/H8THUeuZgb" target="_blank" rel="noopener noreferrer">Discord</a>
+        <a class="menu-btn" href="/pages/contact-us.html">Contact Us</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Contests:</h2>
+      <div class="grid">
+        <a class="menu-btn" href="/pages/active-contest.html">Active Contest</a>
+        <a class="menu-btn" href="/pages/previous-contest.html">Previous Contests</a>
+        <a class="menu-btn" href="/pages/contest-winners.html">Contest Winners</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>From Admin:</h2>
+      <div class="grid">
+        <a class="menu-btn" href="/pages/patch-notes-bug-fixes.html">Patch Notes / Bug Fixes</a>
+        <a class="menu-btn" href="/pages/scheduled-updates.html">Scheduled Updates</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>&copy; 2025 Games by Brandon. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="/pages/privacy-policy.html">Privacy Policy</a>
+        <span>|</span>
+        <a href="/pages/terms-of-service.html">Terms of Service</a>
+        <span>|</span>
+        <a href="/pages/disclaimer.html">Disclaimer</a>
+      </div>
+      <p class="footer-disclaimer">Not affiliated with any third-party platforms. This site is independently operated for the game <strong>Package Panic</strong>.</p>
+      <div class="footer-branding">
+        <p>Created and published by:</p>
+        <img src="/assets/images/icons/Gamesbybrandon logo 128x128.png" alt="Games By Brandon Logo" class="footer-logo" />
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.menu-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        window.location.href = btn.getAttribute('href');
+      });
+    });
+  </script>
 </body>
 </html>
