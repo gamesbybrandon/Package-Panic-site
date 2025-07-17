@@ -13,7 +13,6 @@
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
     }
-
     .leaderboard-container {
       max-width: 1200px;
       margin: 80px auto;
@@ -22,42 +21,35 @@
       border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.15);
     }
-
     h1 {
       text-align: center;
       margin-bottom: 10px;
       font-size: 2rem;
       text-decoration: underline;
     }
-
     #week-display {
       text-align: center;
       font-size: 1.2rem;
       font-weight: bold;
       margin-bottom: 20px;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: center;
     }
-
     th, td {
       padding: 12px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       vertical-align: middle;
     }
-
     th {
       background-color: rgba(255, 255, 255, 0.1);
       font-weight: bold;
     }
-
     tr:nth-child(even) {
       background-color: rgba(255, 255, 255, 0.04);
     }
-
     .awards-cell {
       display: flex;
       justify-content: flex-end;
@@ -65,18 +57,15 @@
       gap: 4px;
       padding: 6px 0;
     }
-
     .award-icon {
       width: 44px;
       height: 40px;
       object-fit: contain;
     }
-
     .pagination {
       margin-top: 20px;
       text-align: center;
     }
-
     .pagination button {
       padding: 8px 16px;
       margin: 0 10px;
@@ -87,124 +76,94 @@
       border-radius: 5px;
       cursor: pointer;
     }
-
     .pagination button:hover {
       background-color: rgba(255, 255, 255, 0.3);
     }
   </style>
-</head>
-<body>
-  <div class="leaderboard-container">
-    <h1>Weekly Leaderboard</h1>
-    <div id="week-display">Loading Week...</div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Level</th>
-          <th>Panic</th>
-          <th>Username</th>
-          <th>Awards</th>
-        </tr>
-      </thead>
-      <tbody id="leaderboard-body"></tbody>
-    </table>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    <div class="pagination">
-      <button id="prev-page" disabled>Previous</button>
-      <button id="next-page">Next</button>
-    </div>
-  </div>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVk9j5oxhJ8Dp21fNHyb2q_GLUoA9q5q8",
+      authDomain: "packagepanic-8d51b.firebaseapp.com",
+      projectId: "packagepanic-8d51b",
+      storageBucket: "packagepanic-8d51b.appspot.com",
+      messagingSenderId: "1013005031900",
+      appId: "1:1013005031900:web:3a348735c268ac6ece9719"
+    };
 
-  <script>
-    function getCurrentWeekNumber() {
-      const now = new Date();
-      const jan1 = new Date(now.getFullYear(), 0, 1);
-      const days = Math.floor((now - jan1) / 86400000);
-      return Math.ceil((days + jan1.getDay() + 1) / 7);
-    }
-
-    document.getElementById("week-display").textContent = `Week ${getCurrentWeekNumber()}`;
-
-    const leaderboardData = []; // Populate this from Firestore
-
-    let currentPage = 0;
-    const rowsPerPage = 25;
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
     const leaderboardBody = document.getElementById("leaderboard-body");
     const prevBtn = document.getElementById("prev-page");
     const nextBtn = document.getElementById("next-page");
 
-    const AWARD_PRIORITY = {
-      "juggernaut": "juggernaut.png",
-      "package_gold": "package_gold.png",
-      "package_silver": "package_silver.png",
-      "package_bronze": "package_bronze.png",
-      "retry": "retry.png",
-      "conveyor_antique": "conveyor_antique.png",
-      "conveyor_used": "conveyor_used.png",
-      "conveyor_shiny": "conveyor_shiny.png",
-      "panic": "panic.png",
-      "code": "code.png",
-      "labrat": "labrat.png",
-      "ads": "ads.png",
-      "cup_platinum": "cup_platinum.png",
-      "cup_gold": "cup_gold.png",
-      "cup_silver": "cup_silver.png",
-      "cup_bronze": "cup_bronze.png",
-      "idea": "idea.png",
-      "artist": "artist.png",
-      "alien": "alien.png"
-    };
+    const rowsPerPage = 25;
+    let currentPage = 0;
+    let leaderboardData = [];
 
-    const AWARD_SLOTS = ["juggernaut", "package", "retry", "conveyor", "panic", "code", "labrat", "ads", "cup", "idea", "artist", "alien"];
-
-    const TIERED_AWARDS = {
+    const AWARD_ORDER = ["star_juggernaut", "package", "retry_junky", "conveyor", "survivor_panic", "code_of_arms", "lab_rat", "binge_watcher", "cup", "thinking_outside_the_box", "royal_artist", "alien_frank"];
+    const TIERED = {
       package: ["package_bronze", "package_silver", "package_gold"],
       conveyor: ["conveyor_shiny", "conveyor_used", "conveyor_antique"],
       cup: ["cup_bronze", "cup_silver", "cup_gold", "cup_platinum"]
     };
+    const ICON_MAP = {
+      star_juggernaut: "Award Juggernaut Star.png",
+      package_bronze: "Award Bronze Package.png",
+      package_silver: "Award Silver Package.png",
+      package_gold: "Award Gold Package.png",
+      retry_junky: "Award Retry Junky.png",
+      conveyor_shiny: "Award Conveyor Shiny.png",
+      conveyor_used: "Award Conveyor Used.png",
+      conveyor_antique: "Award Conveyor Antique.png",
+      survivor_panic: "Award Panic Survivor.png",
+      code_of_arms: "Award Code of Arms.png",
+      lab_rat: "Award Lab Rat.png",
+      binge_watcher: "Award Binge Watcher.png",
+      cup_bronze: "Award Bronze Cup.png",
+      cup_silver: "Award Silver Cup.png",
+      cup_gold: "Award Gold Cup.png",
+      cup_platinum: "Award Platinum Cup.png",
+      thinking_outside_the_box: "Award Thinking Outside the Box.png",
+      royal_artist: "Award Royal Artist.png",
+      alien_frank: "Award Alien Frank.png"
+    };
 
-    function getHighestTier(owned, tierList) {
+    function getHighestTier(userAwards, tierList) {
       for (let i = tierList.length - 1; i >= 0; i--) {
-        if (owned.includes(tierList[i])) return tierList[i];
+        if (userAwards.includes(tierList[i])) return tierList[i];
       }
       return null;
     }
 
     function renderPage(page) {
       leaderboardBody.innerHTML = "";
-
-      leaderboardData.sort((a, b) => b.level - a.level || a.panic - b.panic);
-      leaderboardData.forEach((p, i) => p.rank = i + 1);
-
       const start = page * rowsPerPage;
       const end = start + rowsPerPage;
-      const pageRows = leaderboardData.slice(start, end);
+      const rows = leaderboardData.slice(start, end);
 
-      pageRows.forEach((player) => {
+      rows.forEach((entry, index) => {
         const row = document.createElement("tr");
 
-        const icons = [];
-        for (const key of AWARD_SLOTS) {
-          if (TIERED_AWARDS[key]) {
-            const best = getHighestTier(player.awards, TIERED_AWARDS[key]);
-            icons.push(best ? `<img src="/assets/awards/${best}" class="award-icon" />` : `<div style="width:44px;height:40px;"></div>`);
-          } else {
-            const icon = player.awards.includes(key) ? `<img src="/assets/awards/${AWARD_PRIORITY[key]}" class="award-icon" />` : `<div style="width:44px;height:40px;"></div>`;
-            icons.push(icon);
+        const icons = AWARD_ORDER.map((key) => {
+          if (TIERED[key]) {
+            const tierKey = getHighestTier(entry.awards || [], TIERED[key]);
+            return tierKey ? `<img src="/assets/awards/${ICON_MAP[tierKey]}" class="award-icon">` : `<div style="width:44px;height:40px;"></div>`;
           }
-        }
+          return (entry.awards || []).includes(key) ? `<img src="/assets/awards/${ICON_MAP[key]}" class="award-icon">` : `<div style="width:44px;height:40px;"></div>`;
+        });
 
         row.innerHTML = `
-          <td>${player.rank}</td>
-          <td>${player.level}</td>
-          <td>${player.panic}%</td>
-          <td>${player.username}</td>
+          <td>${start + index + 1}</td>
+          <td>${entry.level}</td>
+          <td>${entry.panic}%</td>
+          <td>${entry.username}</td>
           <td class="awards-cell">${icons.join("")}</td>
         `;
-
         leaderboardBody.appendChild(row);
       });
 
@@ -224,7 +183,56 @@
       renderPage(currentPage);
     });
 
-    renderPage(currentPage);
+    async function fetchLeaderboard() {
+      const snapshot = await getDocs(collection(db, "global_leaderboard"));
+      const rawData = snapshot.docs.map(doc => doc.data());
+
+      // Fetch awards for each entry via uid
+      const enrichedData = await Promise.all(rawData.map(async entry => {
+        let awards = [];
+        if (entry.uid) {
+          const userDoc = await getDoc(doc(db, "users", entry.uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            awards = Object.keys(userData.awards || {});
+          }
+        }
+        return { ...entry, awards };
+      }));
+
+      // Sort then render
+      leaderboardData = enrichedData.sort((a, b) => b.level - a.level || a.panic - b.panic);
+      renderPage(currentPage);
+    }
+
+    document.getElementById("week-display").textContent = `Week ${getCurrentWeekNumber()}`;
+    fetchLeaderboard();
   </script>
+</head>
+<body>
+  <div class="leaderboard-container">
+    <h1>Weekly Leaderboard</h1>
+    <div id="week-display">Loading Week...</div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Level</th>
+          <th>Panic</th>
+          <th>Username</th>
+          <th>Awards</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body">
+        <!-- Populated dynamically -->
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <button id="prev-page" disabled>Previous</button>
+      <button id="next-page">Next</button>
+    </div>
+  </div>
 </body>
 </html>
