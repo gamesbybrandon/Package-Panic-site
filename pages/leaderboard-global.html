@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Global Leaderboard</title>
+  <title>Weekly Leaderboard</title>
   <link rel="stylesheet" href="/assets/css/style.css" />
   <style>
     body {
@@ -95,7 +95,7 @@
 </head>
 <body>
   <div class="leaderboard-container">
-    <h1>Global Leaderboard</h1>
+    <h1>Weekly Leaderboard</h1>
     <div id="week-display">Loading Week...</div>
 
     <table>
@@ -108,9 +108,7 @@
           <th>Awards</th>
         </tr>
       </thead>
-      <tbody id="leaderboard-body">
-        <!-- Data rows will populate here -->
-      </tbody>
+      <tbody id="leaderboard-body"></tbody>
     </table>
 
     <div class="pagination">
@@ -129,13 +127,14 @@
 
     document.getElementById("week-display").textContent = `Week ${getCurrentWeekNumber()}`;
 
+    const leaderboardData = []; // Populate this from Firestore
+
     let currentPage = 0;
     const rowsPerPage = 25;
+
     const leaderboardBody = document.getElementById("leaderboard-body");
     const prevBtn = document.getElementById("prev-page");
     const nextBtn = document.getElementById("next-page");
-
-    const leaderboardData = []; // Placeholder – to be filled from backend
 
     const AWARD_PRIORITY = {
       "juggernaut": "juggernaut.png",
@@ -176,6 +175,10 @@
 
     function renderPage(page) {
       leaderboardBody.innerHTML = "";
+
+      leaderboardData.sort((a, b) => b.level - a.level || a.panic - b.panic);
+      leaderboardData.forEach((p, i) => p.rank = i + 1);
+
       const start = page * rowsPerPage;
       const end = start + rowsPerPage;
       const pageRows = leaderboardData.slice(start, end);
@@ -183,16 +186,14 @@
       pageRows.forEach((player) => {
         const row = document.createElement("tr");
 
-        // Fill out 12-slot award layout
         const icons = [];
-
         for (const key of AWARD_SLOTS) {
           if (TIERED_AWARDS[key]) {
             const best = getHighestTier(player.awards, TIERED_AWARDS[key]);
             icons.push(best ? `<img src="/assets/awards/${best}" class="award-icon" />` : `<div style="width:44px;height:40px;"></div>`);
           } else {
-            const award = key in AWARD_PRIORITY && player.awards.includes(key) ? `<img src="/assets/awards/${AWARD_PRIORITY[key]}" class="award-icon" />` : `<div style="width:44px;height:40px;"></div>`;
-            icons.push(award);
+            const icon = player.awards.includes(key) ? `<img src="/assets/awards/${AWARD_PRIORITY[key]}" class="award-icon" />` : `<div style="width:44px;height:40px;"></div>`;
+            icons.push(icon);
           }
         }
 
