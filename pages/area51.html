@@ -13,6 +13,7 @@
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
     }
+
     .leaderboard-container {
       max-width: 1200px;
       margin: 80px auto;
@@ -21,29 +22,35 @@
       border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.15);
     }
+
     h1 {
       text-align: center;
       margin-bottom: 20px;
       font-size: 2rem;
       text-decoration: underline;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: center;
     }
+
     th, td {
       padding: 12px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       vertical-align: middle;
     }
+
     th {
       background-color: rgba(255, 255, 255, 0.1);
       font-weight: bold;
     }
+
     tr:nth-child(even) {
       background-color: rgba(255, 255, 255, 0.04);
     }
+
     .awards-cell {
       display: flex;
       justify-content: center;
@@ -51,15 +58,18 @@
       gap: 4px;
       padding: 6px 0;
     }
+
     .award-icon {
       width: 44px;
       height: 40px;
       object-fit: contain;
     }
+
     .pagination {
       margin-top: 20px;
       text-align: center;
     }
+
     .pagination button {
       padding: 8px 16px;
       margin: 0 10px;
@@ -70,111 +80,94 @@
       border-radius: 5px;
       cursor: pointer;
     }
+
     .pagination button:hover {
       background-color: rgba(255, 255, 255, 0.3);
     }
   </style>
-</head>
-<body>
-  <div class="leaderboard-container">
-    <h1>Area51 Leaderboard</h1>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Score</th>
-          <th>Time</th>
-          <th>Username</th>
-          <th>Awards</th>
-        </tr>
-      </thead>
-      <tbody id="leaderboard-body"></tbody>
-    </table>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    <div class="pagination">
-      <button id="prev-page" disabled>Previous</button>
-      <button id="next-page">Next</button>
-    </div>
-  </div>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDVk9j5oxhJ8Dp21fNHyb2q_GLUoA9q5q8",
+      authDomain: "packagepanic-8d51b.firebaseapp.com",
+      projectId: "packagepanic-8d51b",
+      storageBucket: "packagepanic-8d51b.appspot.com",
+      messagingSenderId: "1013005031900",
+      appId: "1:1013005031900:web:3a348735c268ac6ece9719"
+    };
 
-  <script>
-    const leaderboardData = []; // Fill from Firebase
-    let currentPage = 0;
-    const rowsPerPage = 25;
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
     const leaderboardBody = document.getElementById("leaderboard-body");
     const prevBtn = document.getElementById("prev-page");
     const nextBtn = document.getElementById("next-page");
 
-    const AWARD_PRIORITY = {
-      "juggernaut": "juggernaut.png",
-      "package_gold": "package_gold.png",
-      "package_silver": "package_silver.png",
-      "package_bronze": "package_bronze.png",
-      "retry": "retry.png",
-      "conveyor_antique": "conveyor_antique.png",
-      "conveyor_used": "conveyor_used.png",
-      "conveyor_shiny": "conveyor_shiny.png",
-      "panic": "panic.png",
-      "code": "code.png",
-      "labrat": "labrat.png",
-      "ads": "ads.png",
-      "cup_platinum": "cup_platinum.png",
-      "cup_gold": "cup_gold.png",
-      "cup_silver": "cup_silver.png",
-      "cup_bronze": "cup_bronze.png",
-      "idea": "idea.png",
-      "artist": "artist.png",
-      "alien": "alien.png"
-    };
+    let currentPage = 0;
+    const rowsPerPage = 25;
+    let leaderboardData = [];
 
-    const AWARD_SLOTS = ["juggernaut", "package", "retry", "conveyor", "panic", "code", "labrat", "ads", "cup", "idea", "artist", "alien"];
+    const AWARD_ORDER = ["star_juggernaut", "package_gold", "package_silver", "package_bronze", "retry_junky", "conveyor_antique", "conveyor_used", "conveyor_shiny", "survivor_panic", "code_of_arms", "lab_rat", "binge_watcher", "cup_platinum", "cup_gold", "cup_silver", "cup_bronze", "thinking_outside_the_box", "royal_artist", "alien_frank"];
 
-    const TIERED_AWARDS = {
+    const DISPLAY_ORDER = ["star_juggernaut", "package", "retry_junky", "conveyor", "survivor_panic", "code_of_arms", "lab_rat", "binge_watcher", "cup", "thinking_outside_the_box", "royal_artist", "alien_frank"];
+
+    const TIERED = {
       package: ["package_bronze", "package_silver", "package_gold"],
       conveyor: ["conveyor_shiny", "conveyor_used", "conveyor_antique"],
       cup: ["cup_bronze", "cup_silver", "cup_gold", "cup_platinum"]
     };
 
-    function getHighestTier(owned, tierList) {
-      for (let i = tierList.length - 1; i >= 0; i--) {
-        if (owned.includes(tierList[i])) return tierList[i];
-      }
-      return null;
+    const AWARD_IMAGES = {
+      star_juggernaut: "Award Juggernaut Star.png",
+      package_bronze: "Award Bronze Package.png",
+      package_silver: "Award Silver Package.png",
+      package_gold: "Award Gold Package.png",
+      retry_junky: "Award Retry Junky.png",
+      conveyor_shiny: "Award Shiny Conveyor.png",
+      conveyor_used: "Award Used Conveyor.png",
+      conveyor_antique: "Award Antique Conveyor.png",
+      survivor_panic: "Award Panic Survivor.png",
+      code_of_arms: "Award Code of Arms.png",
+      lab_rat: "Award Lab Rat.png",
+      binge_watcher: "Award Binge Watcher.png",
+      cup_bronze: "Award Bronze Cup.png",
+      cup_silver: "Award Silver Cup.png",
+      cup_gold: "Award Gold Cup.png",
+      cup_platinum: "Award Platinum Cup.png",
+      thinking_outside_the_box: "Award Thinking outside the box.png",
+      royal_artist: "Award Royal Artist.png",
+      alien_frank: "Award Frank.png"
+    };
+
+    function getAwardIcons(awards) {
+      return DISPLAY_ORDER.map(slot => {
+        if (TIERED[slot]) {
+          const owned = TIERED[slot].findLast(key => awards[key]);
+          return owned ? `<img class="award-icon" src="/assets/images/icons/${AWARD_IMAGES[owned]}" alt="">` : `<div style="width:44px;height:40px;"></div>`;
+        } else {
+          return awards[slot] ? `<img class="award-icon" src="/assets/images/icons/${AWARD_IMAGES[slot]}" alt="">` : `<div style="width:44px;height:40px;"></div>`;
+        }
+      }).join("");
     }
 
     function renderPage(page) {
       leaderboardBody.innerHTML = "";
-
-      // Sort by score DESC, then time DESC
-      leaderboardData.sort((a, b) => b.score - a.score || b.time - a.time);
-      leaderboardData.forEach((p, i) => p.rank = i + 1);
-
       const start = page * rowsPerPage;
       const end = start + rowsPerPage;
       const pageRows = leaderboardData.slice(start, end);
 
-      pageRows.forEach(player => {
+      pageRows.forEach((player, index) => {
         const row = document.createElement("tr");
 
-        const icons = [];
-        for (const slot of AWARD_SLOTS) {
-          if (TIERED_AWARDS[slot]) {
-            const best = getHighestTier(player.awards, TIERED_AWARDS[slot]);
-            icons.push(best ? `<img src="/assets/awards/${best}" class="award-icon" />` : `<div style="width:44px;height:40px;"></div>`);
-          } else {
-            const raw = slot in AWARD_PRIORITY && player.awards.includes(slot) ? `<img src="/assets/awards/${AWARD_PRIORITY[slot]}" class="award-icon" />` : `<div style="width:44px;height:40px;"></div>`;
-            icons.push(raw);
-          }
-        }
-
         row.innerHTML = `
-          <td>${player.rank}</td>
+          <td>${start + index + 1}</td>
           <td>${player.score}</td>
           <td>${player.time}</td>
           <td>${player.username}</td>
-          <td class="awards-cell">${icons.join("")}</td>
+          <td class="awards-cell">${player.awardsHTML}</td>
         `;
 
         leaderboardBody.appendChild(row);
@@ -196,7 +189,64 @@
       renderPage(currentPage);
     });
 
-    renderPage(currentPage);
+    async function fetchData() {
+      const snapshot = await getDocs(collection(db, "leaderboard_area51"));
+      const rows = [];
+
+      for (const docSnap of snapshot.docs) {
+        const data = docSnap.data();
+        const uid = data.uid;
+        let awards = {};
+        let username = data.username || "Unknown";
+
+        if (uid) {
+          const userDoc = await getDoc(doc(db, "users", uid));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            username = userData.username || username;
+            awards = userData.awards || {};
+          }
+        }
+
+        rows.push({
+          score: data.score || 0,
+          time: data.time || 0,
+          username,
+          awardsHTML: getAwardIcons(awards)
+        });
+      }
+
+      rows.sort((a, b) => b.score - a.score || b.time - a.time); // Score first, then time
+      leaderboardData = rows;
+      renderPage(currentPage);
+    }
+
+    fetchData();
   </script>
+</head>
+<body>
+  <div class="leaderboard-container">
+    <h1>Area51 Leaderboard</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Score</th>
+          <th>Time</th>
+          <th>Username</th>
+          <th>Awards</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body">
+        <!-- Dynamically populated rows will appear here -->
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <button id="prev-page" disabled>Previous</button>
+      <button id="next-page">Next</button>
+    </div>
+  </div>
 </body>
 </html>
