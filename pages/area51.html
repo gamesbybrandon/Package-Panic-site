@@ -110,8 +110,6 @@
     const rowsPerPage = 25;
     let leaderboardData = [];
 
-    const AWARD_ORDER = ["star_juggernaut", "package_gold", "package_silver", "package_bronze", "retry_junky", "conveyor_antique", "conveyor_used", "conveyor_shiny", "survivor_panic", "code_of_arms", "lab_rat", "binge_watcher", "cup_platinum", "cup_gold", "cup_silver", "cup_bronze", "thinking_outside_the_box", "royal_artist", "alien_frank"];
-
     const DISPLAY_ORDER = ["star_juggernaut", "package", "retry_junky", "conveyor", "survivor_panic", "code_of_arms", "lab_rat", "binge_watcher", "cup", "thinking_outside_the_box", "royal_artist", "alien_frank"];
 
     const TIERED = {
@@ -227,7 +225,6 @@
 <body>
   <div class="leaderboard-container">
     <h1>Area51 Leaderboard</h1>
-
     <table>
       <thead>
         <tr>
@@ -242,7 +239,6 @@
         <!-- Dynamically populated rows will appear here -->
       </tbody>
     </table>
-
     <div class="pagination">
       <button id="prev-page" disabled>Previous</button>
       <button id="next-page">Next</button>
