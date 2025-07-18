@@ -23,15 +23,9 @@
     }
     h1 {
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
       font-size: 2rem;
       text-decoration: underline;
-    }
-    #week-display {
-      text-align: center;
-      font-size: 1.2rem;
-      font-weight: bold;
-      margin-bottom: 20px;
     }
     table {
       width: 100%;
@@ -52,7 +46,7 @@
     }
     .awards-cell {
       display: flex;
-      justify-content: flex-end;
+      justify-content: center;
       flex-wrap: wrap;
       gap: 4px;
       padding: 6px 0;
@@ -101,8 +95,8 @@
     const prevBtn = document.getElementById("prev-page");
     const nextBtn = document.getElementById("next-page");
 
-    const rowsPerPage = 25;
     let currentPage = 0;
+    const rowsPerPage = 25;
     let leaderboardData = [];
 
     const AWARD_ORDER = ["star_juggernaut", "package", "retry_junky", "conveyor", "survivor_panic", "code_of_arms", "lab_rat", "binge_watcher", "cup", "thinking_outside_the_box", "royal_artist", "alien_frank"];
@@ -184,7 +178,7 @@
     });
 
     async function fetchLeaderboard() {
-      const snapshot = await getDocs(collection(db, "leaderboards/weekly/entries"));
+      const snapshot = await getDocs(collection(db, "leaderboards", "weekly", "entries"));
       const rawData = snapshot.docs.map(doc => doc.data());
 
       const enrichedData = await Promise.all(rawData.map(async entry => {
@@ -203,21 +197,12 @@
       renderPage(currentPage);
     }
 
-    function getCurrentWeekNumber() {
-      const today = new Date();
-      const firstDay = new Date(today.getFullYear(), 0, 1);
-      const dayOfYear = ((today - firstDay + 86400000) / 86400000);
-      return Math.ceil(dayOfYear / 7);
-    }
-
-    document.getElementById("week-display").textContent = `Week ${getCurrentWeekNumber()}`;
     fetchLeaderboard();
   </script>
 </head>
 <body>
   <div class="leaderboard-container">
     <h1>Weekly Leaderboard</h1>
-    <div id="week-display">Loading Week...</div>
 
     <table>
       <thead>
@@ -230,7 +215,7 @@
         </tr>
       </thead>
       <tbody id="leaderboard-body">
-        <!-- Populated dynamically -->
+        <!-- Populated by script -->
       </tbody>
     </table>
 
