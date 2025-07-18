@@ -13,6 +13,7 @@
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
     }
+
     .leaderboard-container {
       max-width: 1200px;
       margin: 80px auto;
@@ -21,29 +22,35 @@
       border-radius: 10px;
       border: 1px solid rgba(255, 255, 255, 0.15);
     }
+
     h1 {
       text-align: center;
       margin-bottom: 20px;
       font-size: 2rem;
       text-decoration: underline;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: center;
     }
+
     th, td {
       padding: 12px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       vertical-align: middle;
     }
+
     th {
       background-color: rgba(255, 255, 255, 0.1);
       font-weight: bold;
     }
+
     tr:nth-child(even) {
       background-color: rgba(255, 255, 255, 0.04);
     }
+
     .awards-cell {
       display: flex;
       justify-content: center;
@@ -51,15 +58,18 @@
       gap: 4px;
       padding: 6px 0;
     }
+
     .award-icon {
       width: 44px;
       height: 40px;
       object-fit: contain;
     }
+
     .pagination {
       margin-top: 20px;
       text-align: center;
     }
+
     .pagination button {
       padding: 8px 16px;
       margin: 0 10px;
@@ -70,6 +80,7 @@
       border-radius: 5px;
       cursor: pointer;
     }
+
     .pagination button:hover {
       background-color: rgba(255, 255, 255, 0.3);
     }
@@ -99,21 +110,25 @@
     const rowsPerPage = 25;
     let leaderboardData = [];
 
-    const AWARD_ORDER = ["star_juggernaut", "package", "retry_junky", "conveyor", "survivor_panic", "code_of_arms", "lab_rat", "binge_watcher", "cup", "thinking_outside_the_box", "royal_artist", "alien_frank"];
+    const AWARD_ORDER = ["star_juggernaut", "package_gold", "package_silver", "package_bronze", "retry_junky", "conveyor_antique", "conveyor_used", "conveyor_shiny", "survivor_panic", "code_of_arms", "lab_rat", "binge_watcher", "cup_platinum", "cup_gold", "cup_silver", "cup_bronze", "thinking_outside_the_box", "royal_artist", "alien_frank"];
+
+    const DISPLAY_ORDER = ["star_juggernaut", "package", "retry_junky", "conveyor", "survivor_panic", "code_of_arms", "lab_rat", "binge_watcher", "cup", "thinking_outside_the_box", "royal_artist", "alien_frank"];
+
     const TIERED = {
       package: ["package_bronze", "package_silver", "package_gold"],
       conveyor: ["conveyor_shiny", "conveyor_used", "conveyor_antique"],
       cup: ["cup_bronze", "cup_silver", "cup_gold", "cup_platinum"]
     };
-    const ICON_MAP = {
+
+    const AWARD_IMAGES = {
       star_juggernaut: "Award Juggernaut Star.png",
       package_bronze: "Award Bronze Package.png",
       package_silver: "Award Silver Package.png",
       package_gold: "Award Gold Package.png",
       retry_junky: "Award Retry Junky.png",
-      conveyor_shiny: "Award Conveyor Shiny.png",
-      conveyor_used: "Award Conveyor Used.png",
-      conveyor_antique: "Award Conveyor Antique.png",
+      conveyor_shiny: "Award Shiny Conveyor.png",
+      conveyor_used: "Award Used Conveyor.png",
+      conveyor_antique: "Award Antique Conveyor.png",
       survivor_panic: "Award Panic Survivor.png",
       code_of_arms: "Award Code of Arms.png",
       lab_rat: "Award Lab Rat.png",
@@ -122,42 +137,39 @@
       cup_silver: "Award Silver Cup.png",
       cup_gold: "Award Gold Cup.png",
       cup_platinum: "Award Platinum Cup.png",
-      thinking_outside_the_box: "Award Thinking Outside the Box.png",
+      thinking_outside_the_box: "Award Thinking outside the box.png",
       royal_artist: "Award Royal Artist.png",
-      alien_frank: "Award Alien Frank.png"
+      alien_frank: "Award Frank.png"
     };
 
-    function getHighestTier(userAwards, tierList) {
-      for (let i = tierList.length - 1; i >= 0; i--) {
-        if (userAwards.includes(tierList[i])) return tierList[i];
-      }
-      return null;
+    function getAwardIcons(awards) {
+      return DISPLAY_ORDER.map(slot => {
+        if (TIERED[slot]) {
+          const owned = TIERED[slot].findLast(key => awards[key]);
+          return owned ? `<img class="award-icon" src="/assets/images/icons/${AWARD_IMAGES[owned]}" alt="">` : `<div style="width:44px;height:40px;"></div>`;
+        } else {
+          return awards[slot] ? `<img class="award-icon" src="/assets/images/icons/${AWARD_IMAGES[slot]}" alt="">` : `<div style="width:44px;height:40px;"></div>`;
+        }
+      }).join("");
     }
 
     function renderPage(page) {
       leaderboardBody.innerHTML = "";
       const start = page * rowsPerPage;
       const end = start + rowsPerPage;
-      const rows = leaderboardData.slice(start, end);
+      const pageRows = leaderboardData.slice(start, end);
 
-      rows.forEach((entry, index) => {
+      pageRows.forEach((player, index) => {
         const row = document.createElement("tr");
-
-        const icons = AWARD_ORDER.map((key) => {
-          if (TIERED[key]) {
-            const tierKey = getHighestTier(entry.awards || [], TIERED[key]);
-            return tierKey ? `<img src="/assets/awards/${ICON_MAP[tierKey]}" class="award-icon">` : `<div style="width:44px;height:40px;"></div>`;
-          }
-          return (entry.awards || []).includes(key) ? `<img src="/assets/awards/${ICON_MAP[key]}" class="award-icon">` : `<div style="width:44px;height:40px;"></div>`;
-        });
 
         row.innerHTML = `
           <td>${start + index + 1}</td>
-          <td>${entry.level}</td>
-          <td>${entry.panic}%</td>
-          <td>${entry.username}</td>
-          <td class="awards-cell">${icons.join("")}</td>
+          <td>${player.level}</td>
+          <td>${player.panic}</td>
+          <td>${player.username}</td>
+          <td class="awards-cell">${player.awardsHTML}</td>
         `;
+
         leaderboardBody.appendChild(row);
       });
 
@@ -177,27 +189,38 @@
       renderPage(currentPage);
     });
 
-    async function fetchLeaderboard() {
+    async function fetchData() {
       const snapshot = await getDocs(collection(db, "leaderboards", "weekly", "entries"));
-      const rawData = snapshot.docs.map(doc => doc.data());
+      const rows = [];
 
-      const enrichedData = await Promise.all(rawData.map(async entry => {
-        let awards = [];
-        if (entry.uid) {
-          const userDoc = await getDoc(doc(db, "users", entry.uid));
+      for (const docSnap of snapshot.docs) {
+        const data = docSnap.data();
+        const uid = data.uid;
+        const username = data.username || "Unknown";
+        let awards = {};
+
+        if (uid) {
+          const userDoc = await getDoc(doc(db, "users", uid));
           if (userDoc.exists()) {
             const userData = userDoc.data();
-            awards = Object.keys(userData.awards || {});
+            awards = userData.awards || {};
           }
         }
-        return { ...entry, awards };
-      }));
 
-      leaderboardData = enrichedData.sort((a, b) => b.level - a.level || a.panic - b.panic);
+        rows.push({
+          level: data.level || 0,
+          panic: data.panic || 0,
+          username,
+          awardsHTML: getAwardIcons(awards)
+        });
+      }
+
+      rows.sort((a, b) => b.level - a.level || a.panic - b.panic); // Highest level first, then lowest panic
+      leaderboardData = rows;
       renderPage(currentPage);
     }
 
-    fetchLeaderboard();
+    fetchData();
   </script>
 </head>
 <body>
@@ -215,7 +238,7 @@
         </tr>
       </thead>
       <tbody id="leaderboard-body">
-        <!-- Populated by script -->
+        <!-- Dynamically populated rows will appear here -->
       </tbody>
     </table>
 
@@ -225,4 +248,5 @@
     </div>
   </div>
 </body>
+</html>
 </html>
