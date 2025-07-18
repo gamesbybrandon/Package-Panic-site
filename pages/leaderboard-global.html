@@ -184,10 +184,9 @@
     });
 
     async function fetchLeaderboard() {
-      const snapshot = await getDocs(collection(db, "global_leaderboard"));
+      const snapshot = await getDocs(collection(db, "leaderboards/weekly/entries"));
       const rawData = snapshot.docs.map(doc => doc.data());
 
-      // Fetch awards for each entry via uid
       const enrichedData = await Promise.all(rawData.map(async entry => {
         let awards = [];
         if (entry.uid) {
@@ -200,9 +199,15 @@
         return { ...entry, awards };
       }));
 
-      // Sort then render
       leaderboardData = enrichedData.sort((a, b) => b.level - a.level || a.panic - b.panic);
       renderPage(currentPage);
+    }
+
+    function getCurrentWeekNumber() {
+      const today = new Date();
+      const firstDay = new Date(today.getFullYear(), 0, 1);
+      const dayOfYear = ((today - firstDay + 86400000) / 86400000);
+      return Math.ceil(dayOfYear / 7);
     }
 
     document.getElementById("week-display").textContent = `Week ${getCurrentWeekNumber()}`;
