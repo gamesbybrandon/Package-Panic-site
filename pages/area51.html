@@ -106,18 +106,16 @@
     const prevBtn = document.getElementById("prev-page");
     const nextBtn = document.getElementById("next-page");
 
-    let currentPage = 0;
     const rowsPerPage = 25;
+    let currentPage = 0;
     let leaderboardData = [];
 
     const DISPLAY_ORDER = ["star_juggernaut", "package", "retry_junky", "conveyor", "survivor_panic", "code_of_arms", "lab_rat", "binge_watcher", "cup", "thinking_outside_the_box", "royal_artist", "alien_frank"];
-
     const TIERED = {
       package: ["package_bronze", "package_silver", "package_gold"],
       conveyor: ["conveyor_shiny", "conveyor_used", "conveyor_antique"],
       cup: ["cup_bronze", "cup_silver", "cup_gold", "cup_platinum"]
     };
-
     const AWARD_IMAGES = {
       star_juggernaut: "Award Juggernaut Star.png",
       package_bronze: "Award Bronze Package.png",
@@ -159,7 +157,6 @@
 
       pageRows.forEach((player, index) => {
         const row = document.createElement("tr");
-
         row.innerHTML = `
           <td>${start + index + 1}</td>
           <td>${player.score}</td>
@@ -167,7 +164,6 @@
           <td>${player.username}</td>
           <td class="awards-cell">${player.awardsHTML}</td>
         `;
-
         leaderboardBody.appendChild(row);
       });
 
@@ -188,7 +184,7 @@
     });
 
     async function fetchData() {
-      const snapshot = await getDocs(collection(db, "leaderboard_area51"));
+      const snapshot = await getDocs(collection(db, "leaderboards/area51_leaderboard")); // ✅ Correct path now
       const rows = [];
 
       for (const docSnap of snapshot.docs) {
@@ -214,7 +210,7 @@
         });
       }
 
-      rows.sort((a, b) => b.score - a.score || b.time - a.time); // Score first, then time
+      rows.sort((a, b) => b.score - a.score || b.time - a.time);
       leaderboardData = rows;
       renderPage(currentPage);
     }
@@ -225,6 +221,7 @@
 <body>
   <div class="leaderboard-container">
     <h1>Area51 Leaderboard</h1>
+
     <table>
       <thead>
         <tr>
@@ -235,10 +232,9 @@
           <th>Awards</th>
         </tr>
       </thead>
-      <tbody id="leaderboard-body">
-        <!-- Dynamically populated rows will appear here -->
-      </tbody>
+      <tbody id="leaderboard-body"></tbody>
     </table>
+
     <div class="pagination">
       <button id="prev-page" disabled>Previous</button>
       <button id="next-page">Next</button>
