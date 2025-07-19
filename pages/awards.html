@@ -4,141 +4,165 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Awards - Package Panic</title>
-  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="/assets/css/style.css" />
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #1d1b1b url('../backgrounds/help_bg.jpg') no-repeat center center fixed;
-      background-size: cover;
-      font-family: 'Segoe UI', sans-serif;
-      color: #fff;
-    }
-    .container {
+    .awards-container {
       max-width: 900px;
       margin: 0 auto;
-      padding: 2rem;
+      padding: 2rem 1rem;
     }
-    .award-block {
-      background: rgba(0, 0, 0, 0.65);
-      border-radius: 15px;
-      padding: 1.25rem;
-      margin-bottom: 2rem;
+
+    .award-item {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-    .award-block img {
-      max-height: 80px;
-      margin: 0.25rem 0.5rem;
-    }
-    .award-title {
-      font-size: 1.3rem;
-      font-weight: bold;
-      margin-top: 0.75rem;
-    }
-    .award-desc {
-      font-size: 1rem;
-      margin-top: 0.5rem;
-    }
-    .row-images {
-      display: flex;
-      justify-content: center;
+      align-items: flex-start;
+      gap: 16px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
       flex-wrap: wrap;
     }
+
+    .award-item img {
+      width: 96px;
+      height: 96px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .award-text {
+      color: #fff;
+      max-width: 700px;
+    }
+
+    .award-name {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .award-desc {
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+
     @media screen and (max-width: 600px) {
-      .award-block img {
-        max-height: 64px;
+      .award-item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
       }
-      .award-title {
-        font-size: 1.1rem;
+
+      .award-item img {
+        margin-bottom: 10px;
       }
-      .award-desc {
-        font-size: 0.95rem;
+
+      .award-text {
+        max-width: 100%;
       }
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-
-    <div class="award-block">
-      <img src="../icons/Award Frank.png" alt="Alien Frank">
-      <div class="award-title">ALIEN FRANK:</div>
-      <div class="award-desc">Awarded for surviving 1 minute or longer in Area 51.</div>
+  <div class="header">
+    <div class="site-title">
+      <img src="/assets/images/icons/Gamesbybrandon logo 128x128.png" alt="Games By Brandon Logo" class="brand-logo" />
+      <h1>PACKAGE PANIC</h1>
     </div>
-
-    <div class="award-block">
-      <img src="../icons/Award Panic Survivor.png" alt="Panic Survivor">
-      <div class="award-title">PANIC SURVIVOR:</div>
-      <div class="award-desc">Awarded for surviving a level with 95% or higher panic.</div>
+    <div class="account-info">
+      <div id="user-info" style="display: none;"></div>
+      <div id="account-action">Login / Create Account</div>
     </div>
+  </div>
 
-    <div class="award-block">
-      <img src="../icons/Award Retry Junky.png" alt="Retry Junky">
-      <div class="award-title">RETRY JUNKY:</div>
-      <div class="award-desc">Awarded for retrying any level 10 times or more.</div>
-    </div>
+  <div class="awards-container">
 
-    <div class="award-block">
-      <img src="../icons/Award Binge Watcher.png" alt="Binge Watcher">
-      <div class="award-title">BINGE WATCHER:</div>
-      <div class="award-desc">Awarded for watching 50 ads.</div>
-    </div>
-
-    <div class="award-block">
-      <img src="../icons/Award Thinking outside the box.png" alt="Thinking Outside the Box">
-      <div class="award-title">THINKING OUTSIDE THE PACKAGE PANIC BOX:</div>
-      <div class="award-desc">Awarded quarterly to players who submit the best ideas for improving the game.</div>
-    </div>
-
-    <div class="award-block">
-      <div class="row-images">
-        <img src="../icons/Award Shiny Conveyor.png" alt="Shiny Conveyor">
-        <img src="../icons/Award Used Conveyor.png" alt="Used Conveyor">
-        <img src="../icons/Award Antique Conveyor.png" alt="Antique Conveyor">
-      </div>
-      <div class="award-title">SHINY / USED / ANTIQUE CONVEYOR:</div>
-      <div class="award-desc">Awarded at 10, 25, and 50 hours of playtime (idle screen time not counted).</div>
-    </div>
-
-    <div class="award-block">
-      <div class="row-images">
-        <img src="../icons/Award Bronze Package.png" alt="Bronze Package">
-        <img src="../icons/Award Silver Package.png" alt="Silver Package">
-        <img src="../icons/Award Gold Package.png" alt="Gold Package">
-      </div>
-      <div class="award-title">BRONZE / SILVER / GOLD PACKAGE:</div>
-      <div class="award-desc">Awarded after placing 1,000 / 2,500 / 5,000 correct packages total.</div>
-    </div>
-
-    <div class="award-block">
-      <div class="row-images">
-        <img src="../icons/Award Bronze Cup.png" alt="Bronze Cup">
-        <img src="../icons/Award Silver Cup.png" alt="Silver Cup">
-        <img src="../icons/Award Gold Cup.png" alt="Gold Cup">
-      </div>
-      <div class="award-title">GOLD / SILVER / BRONZE CUP:</div>
-      <div class="award-desc">
-        Awarded every Tuesday and Friday at 12:00am to players with the TOP 3 spots on the leaderboard for EACH level (ties allowed).<br>
-        (Global Leaderboard refreshes at 12:00am every Tuesday and Friday.)
+    <div class="award-item">
+      <img src="/assets/images/icons/Award Frank.png" alt="Alien Frank">
+      <div class="award-text">
+        <div class="award-name">ALIEN FRANK</div>
+        <div class="award-desc">Awarded for surviving 1 minute or longer in Area 51.</div>
       </div>
     </div>
 
-    <div class="award-block">
-      <img src="../icons/Award Platinum Cup.png" alt="Platinum Cup">
-      <div class="award-title">PLATINUM CUP:</div>
-      <div class="award-desc">Awarded to any player who holds the #1 leaderboard spot on 10 or more levels at once.</div>
+    <div class="award-item">
+      <img src="/assets/images/icons/Award Panic Survivor.png" alt="Panic Survivor">
+      <div class="award-text">
+        <div class="award-name">PANIC SURVIVOR</div>
+        <div class="award-desc">Awarded for surviving a level with 95% or higher panic.</div>
+      </div>
     </div>
 
-    <div class="award-block">
-      <img src="../icons/Award Juggernaut Star.png" alt="Juggernaut Star">
-      <div class="award-title">JUGGERNAUT STAR:</div>
-      <div class="award-desc">Awarded for beating all 50 levels.</div>
+    <div class="award-item">
+      <img src="/assets/images/icons/Award Retry Junky.png" alt="Retry Junky">
+      <div class="award-text">
+        <div class="award-name">RETRY JUNKY</div>
+        <div class="award-desc">Awarded for retrying any level 10 times or more.</div>
+      </div>
+    </div>
+
+    <div class="award-item">
+      <img src="/assets/images/icons/Award Binge Watcher.png" alt="Binge Watcher">
+      <div class="award-text">
+        <div class="award-name">BINGE WATCHER</div>
+        <div class="award-desc">Awarded for watching 50 ads.</div>
+      </div>
+    </div>
+
+    <div class="award-item">
+      <img src="/assets/images/icons/Award Thinking outside the box.png" alt="Thinking Outside the Box">
+      <div class="award-text">
+        <div class="award-name">THINKING OUTSIDE THE PACKAGE PANIC BOX</div>
+        <div class="award-desc">Awarded quarterly to players who submit the best ideas for improving the game.</div>
+      </div>
+    </div>
+
+    <div class="award-item">
+      <img src="/assets/images/icons/Award Shiny Conveyor.png" alt="Conveyor Tier">
+      <div class="award-text">
+        <div class="award-name">SHINY / USED / ANTIQUE CONVEYOR</div>
+        <div class="award-desc">Awarded at 10, 25, and 50 hours of playtime (idle screen time not counted).</div>
+      </div>
+    </div>
+
+    <div class="award-item">
+      <img src="/assets/images/icons/Award Bronze Package.png" alt="Package Tier">
+      <div class="award-text">
+        <div class="award-name">BRONZE / SILVER / GOLD PACKAGE</div>
+        <div class="award-desc">Awarded after placing 1,000 / 2,500 / 5,000 correct packages total.</div>
+      </div>
+    </div>
+
+    <div class="award-item">
+      <img src="/assets/images/icons/Award Bronze Cup.png" alt="Leaderboard Cup">
+      <div class="award-text">
+        <div class="award-name">GOLD / SILVER / BRONZE CUP</div>
+        <div class="award-desc">Awarded every Tuesday and Friday at 12:00am to players with the TOP 3 spots on the leaderboard for EACH level (ties allowed).</div>
+      </div>
+    </div>
+
+    <div class="award-item">
+      <img src="/assets/images/icons/Award Platinum Cup.png" alt="Platinum Cup">
+      <div class="award-text">
+        <div class="award-name">PLATINUM CUP</div>
+        <div class="award-desc">Awarded to any player who holds the #1 leaderboard spot on 10 or more levels at once.</div>
+      </div>
+    </div>
+
+    <div class="award-item">
+      <img src="/assets/images/icons/Award Juggernaut Star.png" alt="Juggernaut Star">
+      <div class="award-text">
+        <div class="award-name">JUGGERNAUT STAR</div>
+        <div class="award-desc">Awarded for beating all 50 levels.</div>
+      </div>
     </div>
 
   </div>
 </body>
 </html>
-
