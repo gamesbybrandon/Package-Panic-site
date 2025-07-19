@@ -23,25 +23,11 @@
     box-shadow: 0 0 12px #000;
   }
 
-  .award-block > img,
-  .tiered-icons {
+  .award-block > img {
     width: 96px;
     height: 96px;
-    margin-bottom: 12px;
     margin-right: 20px;
     flex-shrink: 0;
-  }
-
-  .tiered-icons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-
-  .tiered-icons img {
-    width: 96px;
-    height: 96px;
   }
 
   .award-text {
@@ -61,6 +47,19 @@
     color: #ccc;
   }
 
+  .tiered-icons {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-right: 20px;
+    flex-shrink: 0;
+  }
+
+  .tiered-icons img {
+    width: 96px;
+    height: 96px;
+  }
+
   @media (max-width: 600px) {
     .award-block {
       flex-direction: column;
@@ -71,22 +70,21 @@
     .award-block > img,
     .tiered-icons {
       margin-right: 0;
+      justify-content: center;
     }
 
     .award-text {
+      margin-top: 15px;
       text-align: center;
-      margin-top: 10px;
     }
 
-    .award-text h3 {
-      font-size: 1.2em;
-    }
-
-    .award-text p {
-      font-size: 1em;
+    .tiered-icons {
+      justify-content: center;
+      flex-wrap: nowrap;
     }
   }
 </style>
+
 </head>
 <body>
   <div class="header">
