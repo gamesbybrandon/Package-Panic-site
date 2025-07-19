@@ -47,18 +47,21 @@
     color: #ccc;
   }
 
-  .tiered-icons {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    margin-right: 20px;
-    flex-shrink: 0;
-  }
+.tiered-icons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-right: 20px;
+  flex-shrink: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
 
-  .tiered-icons img {
-    width: 96px;
-    height: 96px;
-  }
+.tiered-icons img {
+  width: 96px;
+  height: 96px;
+}
 
   @media (max-width: 600px) {
     .award-block {
@@ -83,6 +86,15 @@
       flex-wrap: nowrap;
     }
   }
+  /* Fix sticky header so it scrolls away */
+.header {
+  position: relative !important;
+}
+
+/* Prevent right-side overflow on mobile */
+body {
+  overflow-x: hidden;
+}
 </style>
 
 </head>
