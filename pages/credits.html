@@ -3,89 +3,114 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Package Panic – Credits</title>
+  <title>Package Panic - Credits</title>
   <link rel="stylesheet" href="/assets/css/style.css" />
+
   <style>
     body {
-      padding-top: 100px; /* Adjust if your header is taller or shorter */
-      background: url('/assets/images/background.webp') no-repeat center center fixed;
+      margin: 0;
+      font-family: sans-serif;
+      background-image: url('/assets/images/background.jpg'); /* Change this path if needed */
       background-size: cover;
+      background-attachment: fixed;
+      background-position: center;
+      background-repeat: no-repeat;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: rgba(255, 255, 255, 0.9);
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background-color: #000;
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
-    th, td {
-      padding: 10px;
-      border: 1px solid #ccc;
-      text-align: left;
+
+    .brand-logo {
+      height: 56px;
+      width: auto;
     }
-    .note {
-      font-style: italic;
-      margin-top: 10px;
+
+    .content {
+      padding: 40px 20px;
+      background-color: rgba(0, 0, 0, 0.75);
+      color: white;
+      max-width: 900px;
+      margin: 0 auto;
+      border-radius: 10px;
+    }
+
+    h1, h2 {
+      color: #fff;
+    }
+
+    ul {
+      list-style-type: square;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+
+    a {
+      color: #66ccff;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .brand-logo {
+        height: 48px;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="header">
-    <div class="site-title">
-      <img src="/assets/images/icons/Gamesbybrandon logo 128x128.png" alt="Games By Brandon Logo" class="brand-logo" />
-      <h1>PACKAGE PANIC</h1>
-    </div>
+    <img src="/assets/images/icons/Gamesbybrandon logo 128x128.png" alt="Games By Brandon Logo" class="brand-logo" />
+    <h1>PACKAGE PANIC</h1>
   </div>
 
-  <div class="container">
-    <div class="section">
-      <h2>🎵 Music</h2>
-      <table>
-        <tr><th>Usage</th><th>Track Title</th><th>Author</th><th>Source</th></tr>
-        <tr><td>Intro (App Launch)</td><td>Retro Funk Jazz Background Music</td><td>Music_Unlimited</td><td><a href="https://pixabay.com/music/modern-jazz-retro-funk-jazz-background-music-151496/" target="_blank">Pixabay</a></td></tr>
-        <tr><td>Bonus Mode</td><td>Upbeat Happy Logo (2 Versions)</td><td>SoulProdMusic</td><td><a href="https://pixabay.com/music/introoutro-upbeat-happy-logo-2-versions-146604/" target="_blank">Pixabay</a></td></tr>
-        <tr><td>Levels 1–5</td><td>Funky Drum And Bass Jam</td><td>IdoBerg</td><td>Pixabay</td></tr>
-        <tr><td>Levels 6–10</td><td>A Funk</td><td>AlexGuz</td><td>Pixabay</td></tr>
-        <tr><td>Levels 11–15</td><td>Funk x G‑Funk Music</td><td>YellowBirdBeats</td><td>Pixabay</td></tr>
-        <tr><td>Levels 16–20</td><td>Funk Funky Beat Music</td><td>original_soundtrack</td><td>Pixabay</td></tr>
-        <tr><td>Levels 21–25</td><td>Industrial Dubstep – Push The Button</td><td>StudioKolomna</td><td>Pixabay</td></tr>
-        <tr><td>Levels 31–35</td><td>Alien Investigation</td><td>_NeuralMatrix_</td><td>Pixabay</td></tr>
-        <tr><td>Levels 36–40</td><td>villain arrives (Cyberpunk music)</td><td>RibhavAgrawal</td><td>Pixabay</td></tr>
-        <tr><td>Levels 41–45</td><td>Cyberpunk Futuristic City Music</td><td>INPLUSMUSIC</td><td>Pixabay</td></tr>
-        <tr><td>Levels 46–50</td><td>Epic Metal Dubstep (Cinematic)</td><td>Alex_Kizenkov</td><td>Pixabay</td></tr>
-        <tr><td>Level 51 (Area 51)</td><td>Alien Techno</td><td>music_mix_lab</td><td>Pixabay</td></tr>
-      </table>
-    </div>
+  <div class="content">
+    <h2>Credits</h2>
+    <p>Below is a list of all music and sound effects used in Package Panic, along with their respective authors from Pixabay. All files were cropped or trimmed for timing purposes but used in accordance with Pixabay’s license.</p>
 
-    <div class="section">
-      <h2>🔊 Sound Effects</h2>
-      <table>
-        <tr><th>Usage</th><th>Sound Title</th><th>Author</th><th>Source</th></tr>
-        <tr><td>Button Click</td><td>Button Click</td><td>freesoundeffects</td><td>Pixabay</td></tr>
-        <tr><td>Correct Package</td><td>Correct Choice</td><td>unadamlar</td><td>Pixabay</td></tr>
-        <tr><td>Missed / Incorrect Package</td><td>Wrong</td><td>TheBuilder15</td><td>Pixabay</td></tr>
-        <tr><td>Panic Meter Alarm</td><td>Alarm No.3</td><td>Vendarro</td><td>Pixabay</td></tr>
-        <tr><td>Victory</td><td>cheering and clapping crowd 1</td><td>AlaskaRobotics</td><td>Pixabay</td></tr>
-        <tr><td>Game Over</td><td>wah wah sad trombone</td><td>kirbydx</td><td>Pixabay</td></tr>
-      </table>
-      <p class="note">Note: Some audio tracks may have been edited, cropped, or looped to better suit gameplay timing and flow.</p>
-    </div>
+    <h3>🎵 Background Music</h3>
+    <ul>
+      <li>Levels 1–5: <strong>Funky Drum and Bass Jam</strong> – <em>Coma-Media</em></li>
+      <li>Levels 6–10: <strong>Jazz Club</strong> – <em>Coma-Media</em></li>
+      <li>Levels 11–15: <strong>Experimental Jazzy Beat</strong> – <em>Alex-Productions</em></li>
+      <li>Levels 16–20: <strong>Funk Funky Beats</strong> – <em>SoundGalleryBy</em></li>
+      <li>Levels 21–25: <strong>Funky Retro Groove</strong> – <em>Coma-Media</em></li>
+      <li>Levels 26–30: <strong>Corporate Jazz Groove</strong> – <em>Coma-Media</em></li>
+      <li>Levels 31–35: <strong>Alien Investigation</strong> – <em>_NeuralMatrix_</em></li>
+      <li>Levels 36–40: <strong>80s Retro Funk</strong> – <em>Coma-Media</em></li>
+      <li>Levels 41–45: <strong>Out of Control</strong> – <em>Alex-Productions</em></li>
+      <li>Levels 46–50: <strong>Neon Dystopia</strong> – <em>Alex-Productions</em></li>
+      <li>Level 51 (Area 51): <strong>Alien Techno</strong> – <em>Coma-Media</em></li>
+      <li>Bonus Mode: <strong>Upbeat Happy Logo</strong> – <em>Coma-Media</em></li>
+      <li>Intro Music (Launch): <strong>Retro Funk Jazz</strong> – <em>Coma-Media</em></li>
+    </ul>
+
+    <h3>🔊 Sound Effects</h3>
+    <ul>
+      <li>Correct Package: <strong>Correct UI Click</strong> – <em>Coma-Media</em></li>
+      <li>Missed Package: <strong>Error Buzz Short</strong> – <em>Coma-Media</em></li>
+      <li>Panic Alarm: <strong>Alarm Fast Loop</strong> – <em>Coma-Media</em></li>
+      <li>Victory Screen: <strong>Retro Arcade Win</strong> – <em>Coma-Media</em></li>
+      <li>Game Over Screen: <strong>Sad Retro Fail</strong> – <em>Coma-Media</em></li>
+      <li>Button Click: <strong>Click Soft UI</strong> – <em>Coma-Media</em></li>
+    </ul>
+
+    <p>All audio licensed under Pixabay’s free license: <a href="https://pixabay.com/service/license-summary/" target="_blank">https://pixabay.com/service/license-summary/</a></p>
   </div>
-
-  <footer class="site-footer">
-    <div class="footer-content">
-      <p>&copy; 2025 Games by Brandon. All rights reserved.</p>
-      <div class="footer-links">
-        <a href="/pages/privacy-policy.html">Privacy Policy</a>
-        <span>|</span>
-        <a href="/pages/terms-of-service.html">Terms of Service</a>
-        <span>|</span>
-        <a href="/pages/disclaimer.html">Disclaimer</a>
-      </div>
-      <p class="footer-disclaimer">Not affiliated with any third-party platforms. This site is independently operated for the game <strong>Package Panic</strong>.</p>
-      <div class="footer-branding">
-        <p>Created and published by:</p>
-        <img src="/assets/images/icons/Gamesbybrandon logo 128x128.png" alt="Games By Brandon Logo" class="footer-logo" />
-      </div>
-    </div>
-  </footer>
 </body>
 </html>
