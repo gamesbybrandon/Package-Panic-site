@@ -183,7 +183,7 @@
     });
 
     async function fetchData() {
-      const snapshot = await getDocs(collection(db, "leaderboards", "weekly", "entries"));
+      const snapshot = await getDocs(collection(db, "leaderboard_global"));
       const rows = [];
 
       for (const docSnap of snapshot.docs) {
