@@ -85,7 +85,6 @@
       background-color: rgba(255, 255, 255, 0.3);
     }
   </style>
-
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -110,16 +109,12 @@
     const rowsPerPage = 25;
     let leaderboardData = [];
 
-    const AWARD_ORDER = ["star_juggernaut", "package_gold", "package_silver", "package_bronze", "retry_junky", "conveyor_antique", "conveyor_used", "conveyor_shiny", "survivor_panic", "code_of_arms", "lab_rat", "binge_watcher", "cup_platinum", "cup_gold", "cup_silver", "cup_bronze", "thinking_outside_the_box", "royal_artist", "alien_frank"];
-
     const DISPLAY_ORDER = ["star_juggernaut", "package", "retry_junky", "conveyor", "survivor_panic", "code_of_arms", "lab_rat", "binge_watcher", "cup", "thinking_outside_the_box", "royal_artist", "alien_frank"];
-
     const TIERED = {
       package: ["package_bronze", "package_silver", "package_gold"],
       conveyor: ["conveyor_shiny", "conveyor_used", "conveyor_antique"],
       cup: ["cup_bronze", "cup_silver", "cup_gold", "cup_platinum"]
     };
-
     const AWARD_IMAGES = {
       star_juggernaut: "Award Juggernaut Star.png",
       package_bronze: "Award Bronze Package.png",
@@ -161,7 +156,6 @@
 
       pageRows.forEach((player, index) => {
         const row = document.createElement("tr");
-
         row.innerHTML = `
           <td>${start + index + 1}</td>
           <td>${player.level}</td>
@@ -169,7 +163,6 @@
           <td>${player.username}</td>
           <td class="awards-cell">${player.awardsHTML}</td>
         `;
-
         leaderboardBody.appendChild(row);
       });
 
@@ -215,18 +208,18 @@
         });
       }
 
-      rows.sort((a, b) => b.level - a.level || a.panic - b.panic); // Highest level first, then lowest panic
+      rows.sort((a, b) => b.level - a.level || a.panic - b.panic);
       leaderboardData = rows;
       renderPage(currentPage);
     }
 
     fetchData();
+    setInterval(fetchData, 5000);
   </script>
 </head>
 <body>
   <div class="leaderboard-container">
     <h1>Weekly Leaderboard</h1>
-
     <table>
       <thead>
         <tr>
@@ -237,16 +230,12 @@
           <th>Awards</th>
         </tr>
       </thead>
-      <tbody id="leaderboard-body">
-        <!-- Dynamically populated rows will appear here -->
-      </tbody>
+      <tbody id="leaderboard-body"></tbody>
     </table>
-
     <div class="pagination">
       <button id="prev-page" disabled>Previous</button>
       <button id="next-page">Next</button>
     </div>
   </div>
 </body>
-</html>
 </html>
