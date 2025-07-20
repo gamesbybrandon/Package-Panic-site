@@ -85,7 +85,27 @@
       background-color: rgba(255, 255, 255, 0.3);
     }
   </style>
-
+</head>
+<body>
+  <div class="leaderboard-container">
+    <h1>Area51 Leaderboard</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Score</th>
+          <th>Time</th>
+          <th>Username</th>
+          <th>Awards</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body"></tbody>
+    </table>
+    <div class="pagination">
+      <button id="prev-page" disabled>Previous</button>
+      <button id="next-page">Next</button>
+    </div>
+  </div>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -155,14 +175,14 @@
       const end = start + rowsPerPage;
       const pageRows = leaderboardData.slice(start, end);
 
-      pageRows.forEach((player, index) => {
+      pageRows.forEach((entry, index) => {
         const row = document.createElement("tr");
         row.innerHTML = `
           <td>${start + index + 1}</td>
-          <td>${player.score}</td>
-          <td>${player.time}</td>
-          <td>${player.username}</td>
-          <td class="awards-cell">${player.awardsHTML}</td>
+          <td>${entry.score}</td>
+          <td>${entry.time_survived}</td>
+          <td>${entry.username}</td>
+          <td class="awards-cell">${entry.awardsHTML}</td>
         `;
         leaderboardBody.appendChild(row);
       });
@@ -179,19 +199,23 @@
     });
 
     nextBtn.addEventListener("click", () => {
-      currentPage++;
-      renderPage(currentPage);
+      if ((currentPage + 1) * rowsPerPage < leaderboardData.length) {
+        currentPage++;
+        renderPage(currentPage);
+      }
     });
 
     async function fetchData() {
-      const snapshot = await getDocs(collection(db, "leaderboards/area51_leaderboard")); // ✅ Correct path now
+      const snapshot = await getDocs(collection(db, "leaderboard_area51"));
       const rows = [];
 
       for (const docSnap of snapshot.docs) {
         const data = docSnap.data();
-        const uid = data.uid;
-        let awards = {};
+        const uid = data.uid || "";
+        const score = data.score || 0;
+        const time_survived = data.time_survived || 0;
         let username = data.username || "Unknown";
+        let awards = {};
 
         if (uid) {
           const userDoc = await getDoc(doc(db, "users", uid));
@@ -203,42 +227,19 @@
         }
 
         rows.push({
-          score: data.score || 0,
-          time: data.time || 0,
+          score,
+          time_survived,
           username,
           awardsHTML: getAwardIcons(awards)
         });
       }
 
-      rows.sort((a, b) => b.score - a.score || b.time - a.time);
+      rows.sort((a, b) => b.score - a.score || b.time_survived - a.time_survived);
       leaderboardData = rows;
       renderPage(currentPage);
     }
 
     fetchData();
   </script>
-</head>
-<body>
-  <div class="leaderboard-container">
-    <h1>Area51 Leaderboard</h1>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Score</th>
-          <th>Time</th>
-          <th>Username</th>
-          <th>Awards</th>
-        </tr>
-      </thead>
-      <tbody id="leaderboard-body"></tbody>
-    </table>
-
-    <div class="pagination">
-      <button id="prev-page" disabled>Previous</button>
-      <button id="next-page">Next</button>
-    </div>
-  </div>
 </body>
 </html>
