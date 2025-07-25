@@ -243,39 +243,38 @@
 
     async function fetchData() {
       const snapshot = await getDocs(collection(db, "leaderboard_area51"));
-      const uidMap = new Map();
+      const userDocCache = {};
 
-      snapshot.docs.forEach(docSnap => {
+      const rows = await Promise.all(snapshot.docs.map(async (docSnap) => {
         const data = docSnap.data();
         const uid = data.uid || "";
-        uidMap.set(uid, {
+        let awards = {};
+        let username = data.username || "Unknown";
+
+        if (uid && !userDocCache[uid]) {
+          const userDoc = await getDoc(doc(db, "users", uid));
+          if (userDoc.exists()) {
+            userDocCache[uid] = userDoc.data();
+          } else {
+            userDocCache[uid] = null;
+          }
+        }
+
+        if (userDocCache[uid]) {
+          awards = userDocCache[uid].awards || {};
+          username = userDocCache[uid].username || username;
+        }
+
+        return {
           score: data.score || 0,
           time_survived: data.time_survived || 0,
-          username: data.username || "Unknown",
-          awards: {}
-        });
-      });
-
-      const userPromises = Array.from(uidMap.keys()).map(uid =>
-        uid ? getDoc(doc(db, "users", uid)).then(userDoc => ({ uid, userDoc })) : null
-      );
-
-      const userResults = await Promise.all(userPromises);
-
-      userResults.forEach(result => {
-        if (result && result.userDoc.exists()) {
-          const userData = result.userDoc.data();
-          uidMap.get(result.uid).username = userData.username || uidMap.get(result.uid).username;
-          uidMap.get(result.uid).awards = userData.awards || {};
-        }
-      });
-
-      leaderboardData = Array.from(uidMap.values()).map(entry => ({
-        ...entry,
-        awardsHTML: getAwardIcons(entry.awards)
+          username,
+          awardsHTML: getAwardIcons(awards)
+        };
       }));
 
-      leaderboardData.sort((a, b) => b.score - a.score || b.time_survived - a.time_survived);
+      rows.sort((a, b) => b.score - a.score || b.time_survived - a.time_survived);
+      leaderboardData = rows;
       renderPage(currentPage);
     }
 
