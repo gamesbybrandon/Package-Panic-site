@@ -30,10 +30,15 @@
       text-decoration: underline;
     }
 
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: center;
+      min-width: 600px;
     }
 
     th, td {
@@ -84,7 +89,36 @@
     .pagination button:hover {
       background-color: rgba(255, 255, 255, 0.3);
     }
+
+    @media (max-width: 768px) {
+      .leaderboard-container {
+        margin: 20px 10px;
+        padding: 15px;
+        font-size: 0.9rem;
+      }
+
+      table th, table td {
+        padding: 8px;
+        font-size: 0.8rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .award-icon {
+        width: 32px;
+        height: 30px;
+      }
+
+      .pagination button {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+        margin: 4px;
+      }
+    }
   </style>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -184,32 +218,38 @@
 
     async function fetchData() {
       const snapshot = await getDocs(collection(db, "leaderboard_global"));
-      const rows = [];
+      const uidMap = new Map();
 
-      for (const docSnap of snapshot.docs) {
+      snapshot.docs.forEach(docSnap => {
         const data = docSnap.data();
         const uid = data.uid;
         const username = data.username || "Unknown";
-        let awards = {};
-
-        if (uid) {
-          const userDoc = await getDoc(doc(db, "users", uid));
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            awards = userData.awards || {};
-          }
-        }
-
-        rows.push({
+        uidMap.set(uid, {
           level: data.level || 0,
           panic: data.panic || 0,
           username,
-          awardsHTML: getAwardIcons(awards)
+          awards: {}
         });
-      }
+      });
 
-      rows.sort((a, b) => b.level - a.level || a.panic - b.panic);
-      leaderboardData = rows;
+      const userPromises = Array.from(uidMap.keys()).map(uid =>
+        uid ? getDoc(doc(db, "users", uid)).then(userDoc => ({ uid, userDoc })) : null
+      );
+
+      const userResults = await Promise.all(userPromises);
+
+      userResults.forEach(result => {
+        if (result && result.userDoc.exists()) {
+          uidMap.get(result.uid).awards = result.userDoc.data().awards || {};
+        }
+      });
+
+      leaderboardData = Array.from(uidMap.values()).map(entry => ({
+        ...entry,
+        awardsHTML: getAwardIcons(entry.awards)
+      }));
+
+      leaderboardData.sort((a, b) => b.level - a.level || a.panic - b.panic);
       renderPage(currentPage);
     }
 
@@ -220,18 +260,20 @@
 <body>
   <div class="leaderboard-container">
     <h1>Weekly Leaderboard</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Level</th>
-          <th>Panic</th>
-          <th>Username</th>
-          <th>Awards</th>
-        </tr>
-      </thead>
-      <tbody id="leaderboard-body"></tbody>
-    </table>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Level</th>
+            <th>Panic</th>
+            <th>Username</th>
+            <th>Awards</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body"></tbody>
+      </table>
+    </div>
     <div class="pagination">
       <button id="prev-page" disabled>Previous</button>
       <button id="next-page">Next</button>
