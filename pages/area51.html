@@ -30,10 +30,15 @@
       text-decoration: underline;
     }
 
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
       text-align: center;
+      min-width: 600px;
     }
 
     th, td {
@@ -84,28 +89,59 @@
     .pagination button:hover {
       background-color: rgba(255, 255, 255, 0.3);
     }
+
+    @media (max-width: 768px) {
+      .leaderboard-container {
+        margin: 20px 10px;
+        padding: 15px;
+        font-size: 0.9rem;
+      }
+
+      table th, table td {
+        padding: 8px;
+        font-size: 0.8rem;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .award-icon {
+        width: 32px;
+        height: 30px;
+      }
+
+      .pagination button {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+        margin: 4px;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="leaderboard-container">
     <h1>Area51 Leaderboard</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Score</th>
-          <th>Time</th>
-          <th>Username</th>
-          <th>Awards</th>
-        </tr>
-      </thead>
-      <tbody id="leaderboard-body"></tbody>
-    </table>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Score</th>
+            <th>Time</th>
+            <th>Username</th>
+            <th>Awards</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body"></tbody>
+      </table>
+    </div>
     <div class="pagination">
       <button id="prev-page" disabled>Previous</button>
       <button id="next-page">Next</button>
     </div>
   </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -126,9 +162,9 @@
     const prevBtn = document.getElementById("prev-page");
     const nextBtn = document.getElementById("next-page");
 
-    const rowsPerPage = 25;
-    let currentPage = 0;
     let leaderboardData = [];
+    let currentPage = 0;
+    const rowsPerPage = 25;
 
     const DISPLAY_ORDER = ["star_juggernaut", "package", "speedy_delivery", "conveyor", "survivor_panic", "code_of_arms", "lab_rat", "binge_watcher", "cup", "thinking_outside_the_box", "royal_artist", "alien_frank"];
     const TIERED = {
@@ -207,39 +243,44 @@
 
     async function fetchData() {
       const snapshot = await getDocs(collection(db, "leaderboard_area51"));
-      const rows = [];
+      const uidMap = new Map();
 
-      for (const docSnap of snapshot.docs) {
+      snapshot.docs.forEach(docSnap => {
         const data = docSnap.data();
         const uid = data.uid || "";
-        const score = data.score || 0;
-        const time_survived = data.time_survived || 0;
-        let username = data.username || "Unknown";
-        let awards = {};
-
-        if (uid) {
-          const userDoc = await getDoc(doc(db, "users", uid));
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
-            username = userData.username || username;
-            awards = userData.awards || {};
-          }
-        }
-
-        rows.push({
-          score,
-          time_survived,
-          username,
-          awardsHTML: getAwardIcons(awards)
+        uidMap.set(uid, {
+          score: data.score || 0,
+          time_survived: data.time_survived || 0,
+          username: data.username || "Unknown",
+          awards: {}
         });
-      }
+      });
 
-      rows.sort((a, b) => b.score - a.score || b.time_survived - a.time_survived);
-      leaderboardData = rows;
+      const userPromises = Array.from(uidMap.keys()).map(uid =>
+        uid ? getDoc(doc(db, "users", uid)).then(userDoc => ({ uid, userDoc })) : null
+      );
+
+      const userResults = await Promise.all(userPromises);
+
+      userResults.forEach(result => {
+        if (result && result.userDoc.exists()) {
+          const userData = result.userDoc.data();
+          uidMap.get(result.uid).username = userData.username || uidMap.get(result.uid).username;
+          uidMap.get(result.uid).awards = userData.awards || {};
+        }
+      });
+
+      leaderboardData = Array.from(uidMap.values()).map(entry => ({
+        ...entry,
+        awardsHTML: getAwardIcons(entry.awards)
+      }));
+
+      leaderboardData.sort((a, b) => b.score - a.score || b.time_survived - a.time_survived);
       renderPage(currentPage);
     }
 
     fetchData();
+    setInterval(fetchData, 5000);
   </script>
 </body>
 </html>
