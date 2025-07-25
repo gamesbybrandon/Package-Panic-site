@@ -118,6 +118,29 @@
       }
     }
   </style>
+</head>
+<body>
+  <div class="leaderboard-container">
+    <h1>Weekly Leaderboard</h1>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Level</th>
+            <th>Panic</th>
+            <th>Username</th>
+            <th>Awards</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body"></tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <button id="prev-page" disabled>Previous</button>
+      <button id="next-page">Next</button>
+    </div>
+  </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -139,9 +162,9 @@
     const prevBtn = document.getElementById("prev-page");
     const nextBtn = document.getElementById("next-page");
 
+    let leaderboardData = [];
     let currentPage = 0;
     const rowsPerPage = 25;
-    let leaderboardData = [];
 
     const DISPLAY_ORDER = ["star_juggernaut", "package", "speedy_delivery", "conveyor", "survivor_panic", "code_of_arms", "lab_rat", "binge_watcher", "cup", "thinking_outside_the_box", "royal_artist", "alien_frank"];
     const TIERED = {
@@ -212,72 +235,51 @@
     });
 
     nextBtn.addEventListener("click", () => {
-      currentPage++;
-      renderPage(currentPage);
+      if ((currentPage + 1) * rowsPerPage < leaderboardData.length) {
+        currentPage++;
+        renderPage(currentPage);
+      }
     });
 
     async function fetchData() {
       const snapshot = await getDocs(collection(db, "leaderboard_global"));
-      const uidMap = new Map();
+      const userDocCache = {};
 
-      snapshot.docs.forEach(docSnap => {
+      const rows = await Promise.all(snapshot.docs.map(async (docSnap) => {
         const data = docSnap.data();
-        const uid = data.uid;
-        const username = data.username || "Unknown";
-        uidMap.set(uid, {
+        const uid = data.uid || "";
+        let awards = {};
+        let username = data.username || "Unknown";
+
+        if (uid && !userDocCache[uid]) {
+          const userDoc = await getDoc(doc(db, "users", uid));
+          if (userDoc.exists()) {
+            userDocCache[uid] = userDoc.data();
+          } else {
+            userDocCache[uid] = null;
+          }
+        }
+
+        if (userDocCache[uid]) {
+          awards = userDocCache[uid].awards || {};
+          username = userDocCache[uid].username || username;
+        }
+
+        return {
           level: data.level || 0,
           panic: data.panic || 0,
           username,
-          awards: {}
-        });
-      });
-
-      const userPromises = Array.from(uidMap.keys()).map(uid =>
-        uid ? getDoc(doc(db, "users", uid)).then(userDoc => ({ uid, userDoc })) : null
-      );
-
-      const userResults = await Promise.all(userPromises);
-
-      userResults.forEach(result => {
-        if (result && result.userDoc.exists()) {
-          uidMap.get(result.uid).awards = result.userDoc.data().awards || {};
-        }
-      });
-
-      leaderboardData = Array.from(uidMap.values()).map(entry => ({
-        ...entry,
-        awardsHTML: getAwardIcons(entry.awards)
+          awardsHTML: getAwardIcons(awards)
+        };
       }));
 
-      leaderboardData.sort((a, b) => b.level - a.level || a.panic - b.panic);
+      rows.sort((a, b) => b.level - a.level || a.panic - b.panic);
+      leaderboardData = rows;
       renderPage(currentPage);
     }
 
     fetchData();
     setInterval(fetchData, 5000);
   </script>
-</head>
-<body>
-  <div class="leaderboard-container">
-    <h1>Weekly Leaderboard</h1>
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>Level</th>
-            <th>Panic</th>
-            <th>Username</th>
-            <th>Awards</th>
-          </tr>
-        </thead>
-        <tbody id="leaderboard-body"></tbody>
-      </table>
-    </div>
-    <div class="pagination">
-      <button id="prev-page" disabled>Previous</button>
-      <button id="next-page">Next</button>
-    </div>
-  </div>
 </body>
 </html>
