@@ -6,8 +6,23 @@
   <title>Package Blitz</title>
   <link rel="stylesheet" href="/assets/css/style.css" />
 
-  <!-- Inline Styles for Header and Popup -->
   <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('/webpage1080x1920.jpg.png') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      overflow: auto;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      z-index: auto !important;
+    }
+
     .header {
       display: flex;
       justify-content: space-between;
@@ -54,6 +69,96 @@
       font-size: 1em;
       text-decoration: underline;
       cursor: pointer;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .section {
+      width: 100%;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.2);
+      margin: 20px 0;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 8px;
+    }
+
+    .section h2 {
+      text-align: center;
+      font-style: italic;
+      text-decoration: underline;
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      text-align: center;
+    }
+
+    .menu-btn {
+      display: inline-block;
+      padding: 12px 20px;
+      background-color: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 1px solid white;
+      border-radius: 5px;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .menu-btn:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .site-footer {
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      text-align: center;
+      padding: 20px 10px;
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+      margin-top: 40px;
+    }
+
+    .footer-content {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .footer-links {
+      margin: 10px 0;
+    }
+
+    .footer-links a {
+      color: #ccc;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: bold;
+      transition: color 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: white;
+      text-decoration: underline;
+    }
+
+    .footer-disclaimer {
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-top: 8px;
     }
 
     .popup-overlay {
@@ -126,144 +231,35 @@
         flex-direction: column;
         align-items: flex-start;
       }
+
       .account-info {
         justify-content: flex-start;
         gap: 8px;
       }
+
       .user-line {
         font-size: 1.5em;
       }
+
       .site-title {
         flex-direction: column;
         align-items: flex-start;
       }
+
       .brand-logo {
         height: 48px;
       }
     }
   </style>
 
-  <!-- Firebase -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDVk9j5oxhJ8Dp21fNHyb2q_GLUoA9q5q8",
-      authDomain: "packagepanic-8d51b.firebaseapp.com",
-      projectId: "packagepanic-8d51b",
-      storageBucket: "packagepanic-8d51b.appspot.com",
-      messagingSenderId: "1013005031900",
-      appId: "1:1013005031900:web:3a348735c268ac6ece9719"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    const userInfo = document.getElementById("user-info");
-    const accountAction = document.getElementById("account-action");
-
-    function getAwardIcons(awards) {
-      const push = (filename) => filename ? `<img class="award-icon" src="/assets/images/icons/${filename}" alt="award">` : '';
-      const tier = (keys) => keys.find(k => awards[k])?.split('_')[1] || null;
-
-      return [
-        awards["star_juggernaut"] && "Award Juggernaut Star.png",
-        tier(["package_gold", "package_silver", "package_bronze"]) && `Award ${tier(["package_gold", "package_silver", "package_bronze"])} Package.png`,
-        awards["speedy_delivery"] && "Award Speedy Delivery.png",
-        tier(["conveyor_shiny", "conveyor_used", "conveyor_antique"]) && `Award ${tier(["conveyor_shiny", "conveyor_used", "conveyor_antique"])} Conveyor.png`,
-        awards["survivor_panic"] && "Award Panic Survivor.png",
-        awards["code_of_arms"] && "Award Code of Arms.png",
-        awards["lab_rat"] && "Award Lab Rat.png",
-        awards["binge_watcher"] && "Award Binge Watcher.png",
-        tier(["cup_platinum", "cup_gold", "cup_silver", "cup_bronze"]) && `Award ${tier(["cup_platinum", "cup_gold", "cup_silver", "cup_bronze"])} Cup.png`,
-        awards["thinking_outside_the_box"] && "Award Thinking outside the box.png",
-        awards["royal_artist"] && "Award Royal Artist.png",
-        awards["alien_frank"] && "Award Frank.png"
-      ].map(push).join(' ');
-    }
-
-    onAuthStateChanged(auth, async user => {
-      if (user) {
-        const uid = user.uid;
-        const userDoc = await getDoc(doc(db, "users", uid));
-        const data = userDoc.exists() ? userDoc.data() : {};
-        const username = data.username || "User";
-        const awards = data.awards || {};
-
-        userInfo.style.display = "flex";
-        userInfo.innerHTML = `<div class="user-line">${username} ${getAwardIcons(awards)}</div>`;
-        accountAction.textContent = "Log Out";
-        accountAction.onclick = async () => {
-          await signOut(auth);
-          location.reload();
-        };
-      } else {
-        userInfo.style.display = "none";
-        accountAction.textContent = "Login / Create Account";
-        accountAction.onclick = () => {
-          window.location.href = "/pages/account.html";
-        };
-      }
-    });
-
-    // Delete account logic
-    window.addEventListener("DOMContentLoaded", () => {
-      const deleteBtn = document.getElementById("delete-account-btn");
-      const warningPopup = document.getElementById("delete-warning-popup");
-      const confirmPopup = document.getElementById("confirm-delete-popup");
-      const confirmBtn = document.getElementById("confirm-delete-btn");
-      const popupExits = document.querySelectorAll(".popup-exit");
-      const submitBtn = document.getElementById("submit-delete-btn");
-      const emailInput = document.getElementById("delete-email");
-      const passInput = document.getElementById("delete-password");
-      const statusMsg = document.getElementById("delete-status-msg");
-
-      deleteBtn.onclick = () => warningPopup.style.display = "flex";
-      confirmBtn.onclick = () => {
-        warningPopup.style.display = "none";
-        confirmPopup.style.display = "flex";
-      };
-      popupExits.forEach(btn => btn.onclick = () => {
-        warningPopup.style.display = "none";
-        confirmPopup.style.display = "none";
-        emailInput.value = "";
-        passInput.value = "";
-        statusMsg.textContent = "";
-        submitBtn.style.display = "inline-block";
-      });
-
-      submitBtn.onclick = async () => {
-        const email = emailInput.value.trim();
-        const password = passInput.value.trim();
-        if (!email || !password) {
-          statusMsg.textContent = "Please fill in both fields.";
-          statusMsg.style.color = "#fff";
-          return;
-        }
-        try {
-          const cred = await signInWithEmailAndPassword(auth, email, password);
-          const user = cred.user;
-          await deleteDoc(doc(db, "users", user.uid));
-          await deleteUser(user);
-          statusMsg.textContent = "✅ Account has been deleted.";
-          statusMsg.style.color = "#00ff88";
-          submitBtn.style.display = "none";
-        } catch (err) {
-          statusMsg.textContent = "❌ Invalid email or password.";
-          statusMsg.style.color = "#ff4444";
-        }
-      };
-    });
-  </script>
+  <!-- Firebase + Delete Account Script will be inserted below -->
 </head>
 
 <body>
+  <!-- HEADER -->
   <div class="header">
     <div class="site-title">
-      <img src="/assets/images/icons/Gamesbybrandon logo 128x128.png" alt="Logo" class="brand-logo">
+      <img src="/assets/images/icons/Gamesbybrandon logo 128x128.png" alt="Games By Brandon Logo" class="brand-logo" />
       <h1>PACKAGE BLITZ</h1>
     </div>
     <div class="account-info">
@@ -272,30 +268,79 @@
     </div>
   </div>
 
+  <!-- TAGLINE -->
+  <div class="tagline">
+    You think you’ve got what it takes to out-sort the world? Prove it. Compete daily for awards, and quarterly to leave your mark in the game!
+  </div>
+
+  <!-- MAIN CONTENT -->
   <div class="container">
     <div class="section">
-      <h2>Account</h2>
+      <h2>Leaderboards:</h2>
+      <div class="grid">
+        <a class="menu-btn" href="/pages/leaderboard-global.html">Global Leaderboard</a>
+        <a class="menu-btn" href="/pages/area51.html">Area51 Leaderboard</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Account:</h2>
       <div class="grid">
         <a class="menu-btn" href="/pages/stats.html">Stats</a>
         <a class="menu-btn" id="delete-account-btn" href="javascript:void(0)">Delete Account</a>
       </div>
     </div>
+
+    <div class="section">
+      <h2>Game:</h2>
+      <div class="grid">
+        <a class="menu-btn" href="/pages/awards.html">Awards</a>
+        <a class="menu-btn" href="/pages/credits.html">Credits</a>
+        <a class="menu-btn" href="/pages/how-to-play.html">How to Play</a>
+        <a class="menu-btn" href="/pages/download-app.html">Download Package Blitz</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Discussion:</h2>
+      <div class="grid">
+        <a class="menu-btn" href="https://discord.gg/H8THUeuZgb" target="_blank" rel="noopener noreferrer">Discord</a>
+        <a class="menu-btn" href="/pages/contact-us.html">Contact Us</a>
+      </div>
+    </div>
   </div>
 
-  <!-- Delete Account Popups -->
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>&copy; 2025 Games by Brandon. All rights reserved.</p>
+      <div class="footer-links">
+        <a href="/pages/privacy-policy.html">Privacy Policy</a>
+        <span>|</span>
+        <a href="/pages/terms-of-service.html">Terms of Service</a>
+        <span>|</span>
+        <a href="/pages/disclaimer.html">Disclaimer</a>
+      </div>
+      <p class="footer-disclaimer">Not affiliated with any third-party platforms. This site is independently operated for the game <strong>Package Blitz</strong>.</p>
+    </div>
+  </footer>
+
+  <!-- DELETE POPUPS -->
   <div id="delete-warning-popup" class="popup-overlay">
     <div class="popup-box">
       <h3>⚠️ Warning</h3>
-      <p>All stats, awards, and personal data will be permanently erased. Continue?</p>
-      <button id="confirm-delete-btn">Yes</button>
-      <button class="popup-exit">Exit</button>
+      <p>All stats, awards, and personal data associated with this account will be erased forever. This cannot be undone. Do you wish to delete your account?</p>
+      <div class="popup-buttons">
+        <button id="confirm-delete-btn">Yes</button>
+        <button class="popup-exit">Exit</button>
+      </div>
     </div>
   </div>
 
   <div id="confirm-delete-popup" class="popup-overlay">
     <div class="popup-box">
       <h3>We're sorry to see you go</h3>
-      <p>Please confirm your credentials to delete your account forever.</p>
+      <p>Please fill out the fields below to delete your account forever.</p>
       <input id="delete-email" type="email" placeholder="Email" />
       <input id="delete-password" type="password" placeholder="Password" />
       <button id="submit-delete-btn">Submit</button>
@@ -303,5 +348,8 @@
       <button class="popup-exit">Exit</button>
     </div>
   </div>
+
+  <!-- FIREBASE & DELETE LOGIC -->
+  <script type="module" src="/assets/js/firebase-delete-account.js"></script>
 </body>
 </html>
