@@ -323,5 +323,76 @@
       });
     });
   </script>
+  <script type="module">
+import { getAuth, signInWithEmailAndPassword, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// Reuse existing Firebase app, auth, db from earlier script block
+const auth = getAuth();
+const db = getFirestore();
+
+const deleteBtn = document.getElementById("delete-account-btn");
+const warningPopup = document.getElementById("delete-warning-popup");
+const confirmPopup = document.getElementById("confirm-delete-popup");
+const confirmBtn = document.getElementById("confirm-delete-btn");
+const popupExits = document.querySelectorAll(".popup-exit");
+const submitBtn = document.getElementById("submit-delete-btn");
+const emailInput = document.getElementById("delete-email");
+const passInput = document.getElementById("delete-password");
+const statusMsg = document.getElementById("delete-status-msg");
+
+deleteBtn.addEventListener("click", () => {
+  warningPopup.style.display = "flex";
+});
+
+confirmBtn.addEventListener("click", () => {
+  warningPopup.style.display = "none";
+  confirmPopup.style.display = "flex";
+});
+
+popupExits.forEach(btn => {
+  btn.addEventListener("click", () => {
+    warningPopup.style.display = "none";
+    confirmPopup.style.display = "none";
+    emailInput.value = "";
+    passInput.value = "";
+    statusMsg.textContent = "";
+    submitBtn.style.display = "inline-block";
+  });
+});
+
+submitBtn.addEventListener("click", async () => {
+  const email = emailInput.value.trim();
+  const password = passInput.value.trim();
+  statusMsg.style.color = "white";
+  if (!email || !password) {
+    statusMsg.textContent = "Please fill in both fields.";
+    return;
+  }
+
+  try {
+    const cred = await signInWithEmailAndPassword(auth, email, password);
+    const user = cred.user;
+    const uid = user.uid;
+
+    // Delete from Firestore
+    await deleteDoc(doc(db, "users", uid));
+
+    // Delete Firebase Auth account
+    await deleteUser(user);
+
+    statusMsg.textContent = "✅ Account has been deleted. If you have questions, please contact us.";
+    statusMsg.style.color = "#00ff88";
+    submitBtn.style.display = "none";
+
+    // Optional: Sign out
+    await auth.signOut();
+  } catch (err) {
+    console.error(err);
+    statusMsg.textContent = "❌ Invalid email or password.";
+    statusMsg.style.color = "#ff4444";
+  }
+});
+</script>
 </body>
 </html>
