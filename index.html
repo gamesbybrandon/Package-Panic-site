@@ -230,6 +230,7 @@
       <h2>Account:</h2>
       <div class="grid">
         <a class="menu-btn" href="/pages/stats.html">Stats</a>
+        <a class="menu-btn" id="delete-account-btn">Delete Account</a>
       </div>
     </div>
 
@@ -269,6 +270,34 @@
     </div>
   </div>
 
+<!-- Delete Account Warning Popup -->
+<div id="delete-warning-popup" class="popup-overlay">
+  <div class="popup-box">
+    <h3>⚠️ Warning</h3>
+    <p>
+      All stats, awards, and personal data associated with this account will be erased forever. This cannot be undone.
+      Do you wish to delete your account?
+    </p>
+    <div class="popup-buttons">
+      <button id="confirm-delete-btn">Yes</button>
+      <button class="popup-exit">Exit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Delete Popup -->
+<div id="confirm-delete-popup" class="popup-overlay">
+  <div class="popup-box">
+    <h3>We're sorry to see you go</h3>
+    <p>Please fill out the fields below to delete your account forever.</p>
+    <input id="delete-email" type="email" placeholder="Email" />
+    <input id="delete-password" type="password" placeholder="Password" />
+    <button id="submit-delete-btn">Submit</button>
+    <p id="delete-status-msg" class="status-msg"></p>
+    <button class="popup-exit">Exit</button>
+  </div>
+</div>
+  
   <footer class="site-footer">
     <div class="footer-content">
       <p>&copy; 2025 Games by Brandon. All rights reserved.</p>
