@@ -6,6 +6,7 @@
   <title>Package Blitz</title>
   <link rel="stylesheet" href="/assets/css/style.css" />
 
+  <!-- Inline Styles for Header and Popup -->
   <style>
     .header {
       display: flex;
@@ -55,15 +56,69 @@
       cursor: pointer;
     }
 
-    .footer-branding {
-      text-align: center;
-      margin-top: 30px;
+    .popup-overlay {
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
     }
 
-    .footer-logo {
-      height: 48px;
-      width: auto;
-      margin-top: 6px;
+    .popup-box {
+      background: rgba(20, 20, 20, 0.95);
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      padding: 24px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      color: white;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+
+    .popup-box h3 {
+      margin-bottom: 16px;
+      font-size: 1.4em;
+      color: #ff6666;
+    }
+
+    .popup-box input {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      background: #222;
+      color: #fff;
+      border: 1px solid #555;
+      border-radius: 6px;
+      font-size: 1em;
+    }
+
+    .popup-box button {
+      padding: 10px 20px;
+      margin: 8px 4px;
+      border: none;
+      background: #cc0000;
+      color: white;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .popup-box button:hover {
+      background: #ff3333;
+    }
+
+    .status-msg {
+      margin-top: 12px;
+      font-size: 0.95em;
+      font-weight: bold;
     }
 
     @media (max-width: 768px) {
@@ -71,31 +126,28 @@
         flex-direction: column;
         align-items: flex-start;
       }
-
       .account-info {
         justify-content: flex-start;
         gap: 8px;
       }
-
       .user-line {
         font-size: 1.5em;
       }
-
       .site-title {
         flex-direction: column;
         align-items: flex-start;
       }
-
       .brand-logo {
         height: 48px;
       }
     }
   </style>
 
+  <!-- Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut, signInWithEmailAndPassword, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, doc, getDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDVk9j5oxhJ8Dp21fNHyb2q_GLUoA9q5q8",
@@ -110,93 +162,100 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    const userInfo = document.getElementById("user-info");
+    const accountAction = document.getElementById("account-action");
+
     function getAwardIcons(awards) {
-      const icons = [];
+      const push = (filename) => filename ? `<img class="award-icon" src="/assets/images/icons/${filename}" alt="award">` : '';
+      const tier = (keys) => keys.find(k => awards[k])?.split('_')[1] || null;
 
-      const push = (filename) => {
-        if (filename) icons.push(`/assets/images/icons/${filename}`);
-      };
-
-      const tierCheck = (fields) => {
-        for (let i = 0; i < fields.length; i++) {
-          if (awards[fields[i].key]) return fields[i].file;
-        }
-        return null;
-      };
-
-      // A–L Order
-      push(awards["star_juggernaut"] ? "Award Juggernaut Star.png" : null); // A
-
-      push(tierCheck([ // B
-        { key: "package_gold", file: "Award Gold Package.png" },
-        { key: "package_silver", file: "Award Silver Package.png" },
-        { key: "package_bronze", file: "Award Bronze Package.png" },
-      ]));
-
-      push(awards["speedy_delivery"] ? "Award Speedy Delivery.png" : null); // C
-
-      push(tierCheck([ // D
-        { key: "conveyor_shiny", file: "Award Shiny Conveyor.png" },
-        { key: "conveyor_used", file: "Award Used Conveyor.png" },
-        { key: "conveyor_antique", file: "Award Antique Conveyor.png" },
-      ]));
-
-      push(awards["survivor_panic"] ? "Award Panic Survivor.png" : null); // E
-      push(awards["code_of_arms"] ? "Award Code of Arms.png" : null); // F
-      push(awards["lab_rat"] ? "Award Lab Rat.png" : null); // G
-      push(awards["binge_watcher"] ? "Award Binge Watcher.png" : null); // H
-
-      push(tierCheck([ // I
-        { key: "cup_platinum", file: "Award Platinum Cup.png" },
-        { key: "cup_gold", file: "Award Gold Cup.png" },
-        { key: "cup_silver", file: "Award Silver Cup.png" },
-        { key: "cup_bronze", file: "Award Bronze Cup.png" },
-      ]));
-
-      push(awards["thinking_outside_the_box"] ? "Award Thinking outside the box.png" : null); // J
-      push(awards["royal_artist"] ? "Award Royal Artist.png" : null); // K
-      push(awards["alien_frank"] ? "Award Frank.png" : null); // L
-
-      return icons;
+      return [
+        awards["star_juggernaut"] && "Award Juggernaut Star.png",
+        tier(["package_gold", "package_silver", "package_bronze"]) && `Award ${tier(["package_gold", "package_silver", "package_bronze"])} Package.png`,
+        awards["speedy_delivery"] && "Award Speedy Delivery.png",
+        tier(["conveyor_shiny", "conveyor_used", "conveyor_antique"]) && `Award ${tier(["conveyor_shiny", "conveyor_used", "conveyor_antique"])} Conveyor.png`,
+        awards["survivor_panic"] && "Award Panic Survivor.png",
+        awards["code_of_arms"] && "Award Code of Arms.png",
+        awards["lab_rat"] && "Award Lab Rat.png",
+        awards["binge_watcher"] && "Award Binge Watcher.png",
+        tier(["cup_platinum", "cup_gold", "cup_silver", "cup_bronze"]) && `Award ${tier(["cup_platinum", "cup_gold", "cup_silver", "cup_bronze"])} Cup.png`,
+        awards["thinking_outside_the_box"] && "Award Thinking outside the box.png",
+        awards["royal_artist"] && "Award Royal Artist.png",
+        awards["alien_frank"] && "Award Frank.png"
+      ].map(push).join(' ');
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      const accountAction = document.getElementById("account-action");
-      const userInfo = document.getElementById("user-info");
+    onAuthStateChanged(auth, async user => {
+      if (user) {
+        const uid = user.uid;
+        const userDoc = await getDoc(doc(db, "users", uid));
+        const data = userDoc.exists() ? userDoc.data() : {};
+        const username = data.username || "User";
+        const awards = data.awards || {};
 
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          const uid = user.uid;
-          const userDoc = await getDoc(doc(db, "users", uid));
+        userInfo.style.display = "flex";
+        userInfo.innerHTML = `<div class="user-line">${username} ${getAwardIcons(awards)}</div>`;
+        accountAction.textContent = "Log Out";
+        accountAction.onclick = async () => {
+          await signOut(auth);
+          location.reload();
+        };
+      } else {
+        userInfo.style.display = "none";
+        accountAction.textContent = "Login / Create Account";
+        accountAction.onclick = () => {
+          window.location.href = "/pages/account.html";
+        };
+      }
+    });
 
-          if (userDoc.exists()) {
-            const data = userDoc.data();
-            const username = data.username || "User";
-            const awards = data.awards || {};
-            const awardIcons = getAwardIcons(awards);
+    // Delete account logic
+    window.addEventListener("DOMContentLoaded", () => {
+      const deleteBtn = document.getElementById("delete-account-btn");
+      const warningPopup = document.getElementById("delete-warning-popup");
+      const confirmPopup = document.getElementById("confirm-delete-popup");
+      const confirmBtn = document.getElementById("confirm-delete-btn");
+      const popupExits = document.querySelectorAll(".popup-exit");
+      const submitBtn = document.getElementById("submit-delete-btn");
+      const emailInput = document.getElementById("delete-email");
+      const passInput = document.getElementById("delete-password");
+      const statusMsg = document.getElementById("delete-status-msg");
 
-            userInfo.style.display = "flex";
-            userInfo.innerHTML = `
-              <div class="user-line">
-                ${username}
-                ${awardIcons.map(src => `<img class="award-icon" src="${src}" alt="award" />`).join(" ")}
-              </div>
-            `;
-
-            accountAction.textContent = "Log Out";
-            accountAction.onclick = async () => {
-              await signOut(auth);
-              location.reload();
-            };
-          }
-        } else {
-          userInfo.style.display = "none";
-          accountAction.textContent = "Login / Create Account";
-          accountAction.onclick = () => {
-            window.location.href = "/pages/account.html";
-          };
-        }
+      deleteBtn.onclick = () => warningPopup.style.display = "flex";
+      confirmBtn.onclick = () => {
+        warningPopup.style.display = "none";
+        confirmPopup.style.display = "flex";
+      };
+      popupExits.forEach(btn => btn.onclick = () => {
+        warningPopup.style.display = "none";
+        confirmPopup.style.display = "none";
+        emailInput.value = "";
+        passInput.value = "";
+        statusMsg.textContent = "";
+        submitBtn.style.display = "inline-block";
       });
+
+      submitBtn.onclick = async () => {
+        const email = emailInput.value.trim();
+        const password = passInput.value.trim();
+        if (!email || !password) {
+          statusMsg.textContent = "Please fill in both fields.";
+          statusMsg.style.color = "#fff";
+          return;
+        }
+        try {
+          const cred = await signInWithEmailAndPassword(auth, email, password);
+          const user = cred.user;
+          await deleteDoc(doc(db, "users", user.uid));
+          await deleteUser(user);
+          statusMsg.textContent = "✅ Account has been deleted.";
+          statusMsg.style.color = "#00ff88";
+          submitBtn.style.display = "none";
+        } catch (err) {
+          statusMsg.textContent = "❌ Invalid email or password.";
+          statusMsg.style.color = "#ff4444";
+        }
+      };
     });
   </script>
 </head>
@@ -204,7 +263,7 @@
 <body>
   <div class="header">
     <div class="site-title">
-      <img src="/assets/images/icons/Gamesbybrandon logo 128x128.png" alt="Games By Brandon Logo" class="brand-logo" />
+      <img src="/assets/images/icons/Gamesbybrandon logo 128x128.png" alt="Logo" class="brand-logo">
       <h1>PACKAGE BLITZ</h1>
     </div>
     <div class="account-info">
@@ -213,186 +272,36 @@
     </div>
   </div>
 
-  <div class="tagline">
-    You think you’ve got what it takes to out-sort the world? Put your skills to the test and see how you stack up on the leaderboard, compete daily for awards, and in quarterly contests to have your ideas and artwork added to the game! Best of luck to you and oh, try not to panic!
-  </div>
-
   <div class="container">
     <div class="section">
-      <h2>Leaderboards:</h2>
-      <div class="grid">
-        <a class="menu-btn" href="/pages/leaderboard-global.html">Global Leaderboard</a>
-        <a class="menu-btn" href="/pages/area51.html">Area51 Leaderboard</a>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>Account:</h2>
+      <h2>Account</h2>
       <div class="grid">
         <a class="menu-btn" href="/pages/stats.html">Stats</a>
         <a class="menu-btn" id="delete-account-btn" href="javascript:void(0)">Delete Account</a>
       </div>
     </div>
-
-    <div class="section">
-      <h2>Game:</h2>
-      <div class="grid">
-        <a class="menu-btn" href="/pages/awards.html">Awards</a>
-        <a class="menu-btn" href="/pages/credits.html">Credits</a>
-        <a class="menu-btn" href="/pages/how-to-play.html">How to Play</a>
-        <a class="menu-btn" href="/pages/download-app.html">Download Package Blitz</a>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>Discussion:</h2>
-      <div class="grid">
-        <a class="menu-btn" href="https://discord.gg/H8THUeuZgb" target="_blank" rel="noopener noreferrer">Discord</a>
-        <a class="menu-btn" href="/pages/contact-us.html">Contact Us</a>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>Contests:</h2>
-      <div class="grid">
-        <a class="menu-btn" href="/pages/active-contest.html">Active Contest</a>
-        <a class="menu-btn" href="/pages/previous-contest.html">Previous Contests</a>
-        <a class="menu-btn" href="/pages/contest-winners.html">Contest Winners</a>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>From Admin:</h2>
-      <div class="grid">
-        <a class="menu-btn" href="/pages/patch-notes-bug-fixes.html">Patch Notes / Bug Fixes</a>
-        <a class="menu-btn" href="/pages/scheduled-updates.html">Scheduled Updates</a>
-      </div>
-    </div>
   </div>
 
-<!-- Delete Account Warning Popup -->
-<div id="delete-warning-popup" class="popup-overlay">
-  <div class="popup-box">
-    <h3>⚠️ Warning</h3>
-    <p>
-      All stats, awards, and personal data associated with this account will be erased forever. This cannot be undone.
-      Do you wish to delete your account?
-    </p>
-    <div class="popup-buttons">
+  <!-- Delete Account Popups -->
+  <div id="delete-warning-popup" class="popup-overlay">
+    <div class="popup-box">
+      <h3>⚠️ Warning</h3>
+      <p>All stats, awards, and personal data will be permanently erased. Continue?</p>
       <button id="confirm-delete-btn">Yes</button>
       <button class="popup-exit">Exit</button>
     </div>
   </div>
-</div>
 
-<!-- Confirm Delete Popup -->
-<div id="confirm-delete-popup" class="popup-overlay">
-  <div class="popup-box">
-    <h3>We're sorry to see you go</h3>
-    <p>Please fill out the fields below to delete your account forever.</p>
-    <input id="delete-email" type="email" placeholder="Email" />
-    <input id="delete-password" type="password" placeholder="Password" />
-    <button id="submit-delete-btn">Submit</button>
-    <p id="delete-status-msg" class="status-msg"></p>
-    <button class="popup-exit">Exit</button>
-  </div>
-</div>
-  
-  <footer class="site-footer">
-    <div class="footer-content">
-      <p>&copy; 2025 Games by Brandon. All rights reserved.</p>
-      <div class="footer-links">
-        <a href="/pages/privacy-policy.html">Privacy Policy</a>
-        <span>|</span>
-        <a href="/pages/terms-of-service.html">Terms of Service</a>
-        <span>|</span>
-        <a href="/pages/disclaimer.html">Disclaimer</a>
-      </div>
-      <p class="footer-disclaimer">Not affiliated with any third-party platforms. This site is independently operated for the game <strong>Package Blitz</strong>.</p>
-      <div class="footer-branding">
-        <p>Created and published by:</p>
-        <img src="/assets/images/icons/Gamesbybrandon logo 128x128.png" alt="Games By Brandon Logo" class="footer-logo" />
-      </div>
+  <div id="confirm-delete-popup" class="popup-overlay">
+    <div class="popup-box">
+      <h3>We're sorry to see you go</h3>
+      <p>Please confirm your credentials to delete your account forever.</p>
+      <input id="delete-email" type="email" placeholder="Email" />
+      <input id="delete-password" type="password" placeholder="Password" />
+      <button id="submit-delete-btn">Submit</button>
+      <p id="delete-status-msg" class="status-msg"></p>
+      <button class="popup-exit">Exit</button>
     </div>
-  </footer>
-
-  <script>
-    document.querySelectorAll('.menu-btn').forEach(btn => {
-      btn.addEventListener('click', e => {
-        window.location.href = btn.getAttribute('href');
-      });
-    });
-  </script>
-  <script type="module">
-import { getAuth, signInWithEmailAndPassword, deleteUser } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-// Reuse existing Firebase app, auth, db from earlier script block
-const auth = getAuth();
-const db = getFirestore();
-
-const deleteBtn = document.getElementById("delete-account-btn");
-const warningPopup = document.getElementById("delete-warning-popup");
-const confirmPopup = document.getElementById("confirm-delete-popup");
-const confirmBtn = document.getElementById("confirm-delete-btn");
-const popupExits = document.querySelectorAll(".popup-exit");
-const submitBtn = document.getElementById("submit-delete-btn");
-const emailInput = document.getElementById("delete-email");
-const passInput = document.getElementById("delete-password");
-const statusMsg = document.getElementById("delete-status-msg");
-
-deleteBtn.addEventListener("click", () => {
-  warningPopup.style.display = "flex";
-});
-
-confirmBtn.addEventListener("click", () => {
-  warningPopup.style.display = "none";
-  confirmPopup.style.display = "flex";
-});
-
-popupExits.forEach(btn => {
-  btn.addEventListener("click", () => {
-    warningPopup.style.display = "none";
-    confirmPopup.style.display = "none";
-    emailInput.value = "";
-    passInput.value = "";
-    statusMsg.textContent = "";
-    submitBtn.style.display = "inline-block";
-  });
-});
-
-submitBtn.addEventListener("click", async () => {
-  const email = emailInput.value.trim();
-  const password = passInput.value.trim();
-  statusMsg.style.color = "white";
-  if (!email || !password) {
-    statusMsg.textContent = "Please fill in both fields.";
-    return;
-  }
-
-  try {
-    const cred = await signInWithEmailAndPassword(auth, email, password);
-    const user = cred.user;
-    const uid = user.uid;
-
-    // Delete from Firestore
-    await deleteDoc(doc(db, "users", uid));
-
-    // Delete Firebase Auth account
-    await deleteUser(user);
-
-    statusMsg.textContent = "✅ Account has been deleted. If you have questions, please contact us.";
-    statusMsg.style.color = "#00ff88";
-    submitBtn.style.display = "none";
-
-    // Optional: Sign out
-    await auth.signOut();
-  } catch (err) {
-    console.error(err);
-    statusMsg.textContent = "❌ Invalid email or password.";
-    statusMsg.style.color = "#ff4444";
-  }
-});
-</script>
+  </div>
 </body>
 </html>
